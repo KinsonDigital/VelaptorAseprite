@@ -1,0 +1,17 @@
+{
+    "cSpell.words": [
+        "Aseprite",
+        "Kinson",
+        "Velaptor",
+        "Xunit"
+    ],
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/bin": true,
+        "**/obj": true
+    }
+}
