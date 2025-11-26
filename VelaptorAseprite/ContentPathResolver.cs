@@ -1,0 +1,151 @@
+﻿// using System.IO.Abstractions;
+// using System.Runtime.InteropServices;
+// using Velaptor;
+// using Velaptor.Content;
+//
+// namespace VelaptorAseprite;
+//
+// using Services;
+//
+// /// <summary>
+// /// Manages the content source.
+// /// </summary>
+// internal abstract class ContentPathResolver : IContentPathResolver
+// {
+//     private const char WinDirSepChar = '\\';
+//     private readonly IFile file;
+//     private readonly IPath path;
+//     private readonly IPlatform platform;
+//     private string rootDirPath;
+//     private string contentDirName = string.Empty;
+//
+//     /// <inheritdoc/>
+//     public string RootDirectoryPath
+//     {
+//         get => this.rootDirPath;
+//         set
+//         {
+//             var isNullOrEmpty = string.IsNullOrEmpty(value);
+//             value = isNullOrEmpty ? string.Empty : value;
+//
+//             if (isNullOrEmpty)
+//             {
+//                 return;
+//             }
+//
+//             value = this.platform.CurrentPlatform == OSPlatform.Windows
+//                 ? value.Replace(this.path.AltDirectorySeparatorChar, this.path.DirectorySeparatorChar)
+//                 : value.Replace(WinDirSepChar, this.path.AltDirectorySeparatorChar);
+//
+//             value = value.EndsWith(this.path.DirectorySeparatorChar) ||
+//                     value.EndsWith(this.path.AltDirectorySeparatorChar)
+//                 ? value[..^1]
+//                 : value;
+//
+//             this.rootDirPath = value;
+//         }
+//     }
+//
+//     /// <inheritdoc/>
+//     public string ContentDirectoryName
+//     {
+//         get => this.contentDirName;
+//         set => this.contentDirName = value.GetLastDirName();
+//     }
+//
+//     /// <summary>
+//     /// Initializes a new instance of the <see cref="ContentPathResolver"/> class.
+//     /// </summary>
+//     /// <param name="appService">Provides application services.</param>
+//     /// <param name="file">Performs operations with files.</param>
+//     /// <param name="path">Processes directory and file paths.</param>
+//     /// <param name="platform">Provides information about the current platform.</param>
+//     /// <exception cref="ArgumentNullException">
+//     /// Thrown if the following parameters are null:
+//     /// <list type="bullet">
+//     ///     <item><paramref name="appService"/></item>
+//     ///     <item><paramref name="file"/></item>
+//     ///     <item><paramref name="path"/></item>
+//     ///     <item><paramref name="platform"/></item>
+//     /// </list>
+//     /// </exception>
+//     protected ContentPathResolver(IAppService appService, IFile file, IPath path, IPlatform platform)
+//     {
+//         ArgumentNullException.ThrowIfNull(appService);
+//         ArgumentNullException.ThrowIfNull(file);
+//         ArgumentNullException.ThrowIfNull(path);
+//         ArgumentNullException.ThrowIfNull(platform);
+//
+//         this.file = file;
+//         this.path = path;
+//         this.platform = platform;
+//         this.rootDirPath = $"{appService.AppDirectory}{path.DirectorySeparatorChar}Content";
+//     }
+//
+//     /// <inheritdoc/>
+//     /// <returns>The resolved content file path.</returns>
+//     /// <exception cref="ArgumentNullException">Thrown if the <paramref name="contentPathOrName"/> is null.</exception>
+//     /// <exception cref="ArgumentException">
+//     /// Thrown for the following reasons:
+//     /// <list type="bullet">
+//     ///     <item>If the <paramref name="contentPathOrName"/> is empty.</item>
+//     ///     <item>If the <paramref name="contentPathOrName"/> ends with a directory separator character.</item>
+//     ///     <item>If the <paramref name="contentPathOrName"/> does not end with an extension.</item>
+//     /// </list>
+//     /// </exception>
+//     /// <exception cref="FileNotFoundException">Thrown if the content file does not exist.</exception>
+//     public virtual string ResolveFilePath(string contentPathOrName)
+//     {
+//         ArgumentException.ThrowIfNullOrEmpty(contentPathOrName);
+//
+//         if (contentPathOrName.EndsWith(this.path.DirectorySeparatorChar) || contentPathOrName.EndsWith(this.path.AltDirectorySeparatorChar))
+//         {
+//             var exMsg = $"The '{contentPathOrName}' cannot end with a folder. It must end with or without an extension.";
+//             throw new ArgumentException(exMsg, nameof(contentPathOrName));
+//         }
+//
+//         contentPathOrName = this.platform.CurrentPlatform == OSPlatform.Windows
+//             ? contentPathOrName.Replace(this.path.AltDirectorySeparatorChar, this.path.DirectorySeparatorChar)
+//             : contentPathOrName.Replace(WinDirSepChar, this.path.AltDirectorySeparatorChar);
+//
+//         contentPathOrName = contentPathOrName.StartsWith($".{WinDirSepChar}") ||
+//                             contentPathOrName.StartsWith($".{this.path.AltDirectorySeparatorChar}")
+//             ? contentPathOrName[2..]
+//             : contentPathOrName;
+//
+//         if (!this.path.HasExtension(contentPathOrName))
+//         {
+//             throw new ArgumentException($"The '{contentPathOrName}' must end with an extension.", nameof(contentPathOrName));
+//         }
+//
+//         var contentDirPath = GetContentDirPath();
+//
+//         var fullContentFilePath = this.path.IsPathRooted(contentPathOrName)
+//             ? contentPathOrName
+//             : $"{contentDirPath}{this.path.DirectorySeparatorChar}{contentPathOrName}";
+//
+//         if (!this.file.Exists(fullContentFilePath))
+//         {
+//             throw new FileNotFoundException("The content file could not be found.", fullContentFilePath);
+//         }
+//
+//         return fullContentFilePath;
+//     }
+//
+//     /// <inheritdoc/>
+//     public string ResolveDirPath() => $"{this.rootDirPath}{this.path.DirectorySeparatorChar}{this.contentDirName}";
+//
+//     /// <summary>
+//     /// Gets the directory path of the content.
+//     /// </summary>
+//     /// <returns>The full directory path to the content directory.</returns>
+//     private string GetContentDirPath()
+//     {
+//         var rootPath = this.rootDirPath.EndsWith(this.path.DirectorySeparatorChar) ||
+//                        this.rootDirPath.EndsWith(this.path.AltDirectorySeparatorChar)
+//             ? this.rootDirPath[..^1]
+//             : this.rootDirPath;
+//
+//         return $"{rootPath}{this.path.DirectorySeparatorChar}{this.contentDirName}";
+//     }
+// }
