@@ -1,13 +1,11 @@
-﻿using System.Drawing;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json;
 using AsepriteTesting;
 using VelaptorAseprite;
 using VelaptorAseprite.Data;
 
 // var frame = new AnimationFrame();
 //
-// var filePath = Path.Combine(AppContext.BaseDirectory, "TestData", "FrameData.json");
+// var filePath = Path.Combine(AppContext.BaseDirectory, "Content", "Atlas", "FrameData.json");
 // var jsonData = File.ReadAllText(filePath);
 //
 //
@@ -15,8 +13,8 @@ using VelaptorAseprite.Data;
 // {
 //     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 // });
-
-
+//
+//
 // return 0;
 
 // Create a new game instance and run it to start the game

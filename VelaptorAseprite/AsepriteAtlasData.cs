@@ -7,7 +7,7 @@ using Velaptor.Content;
 
 internal class AsepriteAtlasData : IAsepriteAtlasData
 {
-    public ITexture Texture { get; internal set;}
+    public ITexture Texture { get; internal set; }
 
     public string Name { get; internal set; }
 

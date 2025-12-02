@@ -7,7 +7,6 @@ namespace VelaptorAseprite;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using SimpleInjector;
-using Velaptor.Content;
 using Velaptor.Content.Factories;
 using Velaptor.Factories;
 using Velaptor.Services;
@@ -46,9 +45,11 @@ internal static class IoC
         IoCContainer.Register<IAsepriteAtlasLoader>(() =>
         {
             var textureFactory = VelapIoC.Container.GetInstance<ITextureFactory>();
-            var atlasDataFactory = VelapIoC.Container.GetInstance<IAtlasDataFactory>();
             var reactableFactory = VelapIoC.Container.GetInstance<IReactableFactory>();
-            var atlasDataPathResolver = VelapIoC.Container.GetInstance<IContentPathResolver>();
+
+            var pathResolverFactory = VelapIoC.Container.GetInstance<IPathResolverFactory>();
+            var atlasDataPathResolver = pathResolverFactory.CreateAtlasPathResolver();
+
             var imageService = VelapIoC.Container.GetInstance<IImageService>();
             var jsonService = VelapIoC.Container.GetInstance<IJsonService>();
             var directory = VelapIoC.Container.GetInstance<IDirectory>();
@@ -56,7 +57,6 @@ internal static class IoC
             var path = VelapIoC.Container.GetInstance<IPath>();
 
             return new AsepriteAtlasLoader(textureFactory,
-                atlasDataFactory,
                 reactableFactory,
                 atlasDataPathResolver,
                 imageService,

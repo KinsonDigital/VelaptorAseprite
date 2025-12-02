@@ -12,4 +12,9 @@ using Velaptor.Content;
 /// </summary>
 internal interface IAsepriteAtlasLoader : IUnloader<IAsepriteAtlasData>
 {
+    /// <inheritdoc cref="IAtlasLoader.TotalCachedItems"/>
+    int TotalCachedItems { get; }
+
+    /// <inheritdoc cref="IAtlasLoader.Load"/>
+    IAsepriteAtlasData Load(string atlasPathOrName);
 }

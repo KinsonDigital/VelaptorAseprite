@@ -15,7 +15,6 @@ using Velaptor.Content;
 using Velaptor.Content.Exceptions;
 using Velaptor.Content.Factories;
 using Velaptor.Factories;
-using Velaptor.Graphics;
 using Velaptor.ReactableData;
 using Velaptor.Services;
 
@@ -28,7 +27,6 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
     private readonly IPushReactable<DisposeTextureData> disposeReactable;
     private readonly IDisposable unsubscriber;
     private readonly ITextureFactory textureFactory;
-    private readonly IAtlasDataFactory atlasDataFactory;
     private readonly IContentPathResolver atlasDataPathResolver;
     private readonly IImageService imageService;
     private readonly IJsonService jsonService;
@@ -41,7 +39,6 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
     /// Initializes a new instance of the <see cref="AsepriteAtlasLoader"/> class.
     /// </summary>
     /// <param name="textureFactory">Creates textures.</param>
-    /// <param name="atlasDataFactory">Generates <see cref="IAtlasData"/> instances.</param>
     /// <param name="reactableFactory">Creates reactables for sending and receiving notifications with or without data.</param>
     /// <param name="atlasDataPathResolver">Resolves paths to JSON atlas data files.</param>
     /// <param name="imageService">Provides image related services.</param>
@@ -54,7 +51,6 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
     /// </exception>
     public AsepriteAtlasLoader(
         ITextureFactory textureFactory,
-        IAtlasDataFactory atlasDataFactory,
         IReactableFactory reactableFactory,
         IContentPathResolver atlasDataPathResolver,
         IImageService imageService,
@@ -64,7 +60,6 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
         IPath path)
     {
         ArgumentNullException.ThrowIfNull(textureFactory);
-        ArgumentNullException.ThrowIfNull(atlasDataFactory);
         ArgumentNullException.ThrowIfNull(reactableFactory);
         ArgumentNullException.ThrowIfNull(atlasDataPathResolver);
         ArgumentNullException.ThrowIfNull(imageService);
@@ -74,7 +69,6 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
         ArgumentNullException.ThrowIfNull(path);
 
         this.textureFactory = textureFactory;
-        this.atlasDataFactory = atlasDataFactory;
         this.atlasDataPathResolver = atlasDataPathResolver;
         this.imageService = imageService;
         this.jsonService = jsonService;
@@ -107,10 +101,10 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
         ShutDown();
     }
 
-    /// <inheritdoc cref="IAtlasLoader.TotalCachedItems"/>
+    /// <inheritdoc cref="IAsepriteAtlasLoader.TotalCachedItems"/>
     public int TotalCachedItems => this.atlasCache.Count;
 
-    /// <inheritdoc cref="IAtlasLoader.Load"/>
+    /// <inheritdoc cref="IAsepriteAtlasLoader.Load"/>
     /// <exception cref="ArgumentNullException">Thrown if the <paramref name="atlasPathOrName"/> is null or empty.</exception>
     /// <exception cref="LoadAtlasException">Thrown if the .</exception>
     /// <exception cref="LoadContentException">Thrown if an issue occurs with loading the atlas JSON data.</exception>

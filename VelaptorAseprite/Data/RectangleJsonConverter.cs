@@ -8,12 +8,12 @@ public class RectangleJsonConverter : JsonConverter<Rectangle>
     {
         using var doc = JsonDocument.ParseValue(ref reader);
         var root = doc.RootElement;
-        
+
         var x = root.GetProperty("x").GetInt32();
         var y = root.GetProperty("y").GetInt32();
         var w = root.GetProperty("w").GetInt32();
         var h = root.GetProperty("h").GetInt32();
-        
+
         return new Rectangle(x, y, w, h);
     }
 

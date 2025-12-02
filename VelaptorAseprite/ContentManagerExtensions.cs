@@ -6,15 +6,15 @@ namespace VelaptorAseprite;
 
 using Velaptor.Content;
 using Data;
-using Services;
-using Velaptor;
 
 public static class ContentManagerExtensions
 {
-    public static IAsepriteAtlasData LoadAsepriteAtlasData(this IContentManager contentManager, string pathOrNanme)
+    public static IAsepriteAtlasData LoadAsepriteAtlasData(this IContentManager _, string pathOrNanme)
     {
         var atlasLoader = IoC.Container.GetInstance<IAsepriteAtlasLoader>();
 
-        return null;
+        var atlasData = atlasLoader.Load(pathOrNanme);
+
+        return atlasData;
     }
 }
