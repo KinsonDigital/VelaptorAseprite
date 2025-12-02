@@ -4,10 +4,12 @@
 
 namespace AsepriteTesting;
 
+using System.Drawing;
 using Velaptor;
 using Velaptor.Batching;
 using Velaptor.Content;
 using Velaptor.Factories;
+using Velaptor.Graphics;
 using Velaptor.Graphics.Renderers;
 using Velaptor.UI;
 using VelaptorAseprite;
@@ -65,6 +67,8 @@ public class Game : Window
     /// <param name="frameTime">The amount of time that passed for the current game loop frame.</param>
     protected override void OnUpdate(FrameTime frameTime)
     {
+
+
         base.OnUpdate(frameTime);
     }
 
@@ -76,7 +80,21 @@ public class Game : Window
     {
         this.batcher.Begin();
 
-        this.textureRenderer.Render(this.atlasData.Texture, 400, 400);
+        var frame = this.atlasData.Frames[0];
+
+        var srcRect = frame.Bounds;
+        var destRect = new Rectangle(0, 0, (int)this.atlasData.Texture.Width, (int)this.atlasData.Texture.Height);
+        destRect.X = 400;
+        destRect.Y = 400;
+
+        this.textureRenderer.Render(
+            this.atlasData.Texture,
+            srcRect,
+            destRect,
+            3f,
+            0f,
+            Color.White,
+            RenderEffects.None);
 
         this.batcher.End();
 

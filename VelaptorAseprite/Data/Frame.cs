@@ -6,7 +6,8 @@ namespace VelaptorAseprite.Data;
 public class AnimationFrame
 {
     [JsonConverter(typeof(RectangleJsonConverter))]
-    public Rectangle Frame { get; set; }
+    [JsonPropertyName("frame")]
+    public Rectangle Bounds { get; set; }
 
     public bool Rotated { get; set; }
 

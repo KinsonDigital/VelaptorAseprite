@@ -9,11 +9,11 @@ using Data;
 
 public static class ContentManagerExtensions
 {
-    public static IAsepriteAtlasData LoadAsepriteAtlasData(this IContentManager _, string pathOrNanme)
+    public static IAsepriteAtlasData LoadAsepriteAtlasData(this IContentManager _, string pathOrName)
     {
         var atlasLoader = IoC.Container.GetInstance<IAsepriteAtlasLoader>();
 
-        var atlasData = atlasLoader.Load(pathOrNanme);
+        var atlasData = atlasLoader.Load(pathOrName);
 
         return atlasData;
     }

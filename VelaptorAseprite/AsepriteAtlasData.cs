@@ -3,6 +3,7 @@ using VelaptorAseprite.Data;
 
 namespace VelaptorAseprite;
 
+using System.Text.Json.Serialization;
 using Velaptor.Content;
 
 internal class AsepriteAtlasData : IAsepriteAtlasData
@@ -13,12 +14,17 @@ internal class AsepriteAtlasData : IAsepriteAtlasData
 
     public string FilePath { get; internal set; }
 
-    public Dictionary<string, AnimationFrame> Frames { get; set; }
+    [JsonConverter(typeof(FramesJsonConverter))]
+    public Dictionary<int, AnimationFrame> Frames { get; set; }
 
     public MetaData Meta { get; set; }
 
-    public void Update(FrameTime frameTime)
+    public AnimationFrame GetCurrentFrame()
     {
         throw new NotImplementedException();
+    }
+
+    public void Update(FrameTime frameTime)
+    {
     }
 }

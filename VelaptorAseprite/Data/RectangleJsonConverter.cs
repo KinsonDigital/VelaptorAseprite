@@ -1,8 +1,14 @@
+// <copyright file="RectangleJsonConverter.cs" company="KinsonDigital">
+// Copyright (c) KinsonDigital. All rights reserved.
+// </copyright>
+
+namespace VelaptorAseprite.Data;
+
 using System.Drawing;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-public class RectangleJsonConverter : JsonConverter<Rectangle>
+internal class RectangleJsonConverter : JsonConverter<Rectangle>
 {
     public override Rectangle Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

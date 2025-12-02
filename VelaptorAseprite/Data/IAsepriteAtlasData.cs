@@ -11,7 +11,7 @@ public interface IAsepriteAtlasData : IContent, IUpdatable
 {
     ITexture Texture { get; }
 
-    public Dictionary<string, AnimationFrame> Frames { get; set; }
+    public Dictionary<int, AnimationFrame> Frames { get; set; }
 
     public MetaData Meta { get; set; }
 }
