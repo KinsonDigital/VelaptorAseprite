@@ -1,4 +1,8 @@
-﻿namespace AsepriteTesting;
+﻿// <copyright file="Game.cs" company="KinsonDigital">
+// Copyright (c) KinsonDigital. All rights reserved.
+// </copyright>
+
+namespace AsepriteTesting;
 
 using Velaptor;
 using Velaptor.Batching;
@@ -41,6 +45,8 @@ public class Game : Window
     /// </summary>
     protected override void OnUnload()
     {
+        this.contentManager.UnloadAsepriteAtlasData(this.atlasData);
+
         base.OnUnload();
     }
 

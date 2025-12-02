@@ -17,4 +17,11 @@ public static class ContentManagerExtensions
 
         return atlasData;
     }
+
+    public static void UnloadAsepriteAtlasData(this IContentManager _, IAsepriteAtlasData atlasData)
+    {
+        var atlasLoader = IoC.Container.GetInstance<IAsepriteAtlasLoader>();
+
+        atlasLoader.Unload(atlasData);
+    }
 }

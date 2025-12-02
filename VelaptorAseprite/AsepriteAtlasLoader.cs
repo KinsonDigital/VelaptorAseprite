@@ -17,6 +17,7 @@ using Velaptor.Content.Factories;
 using Velaptor.Factories;
 using Velaptor.ReactableData;
 using Velaptor.Services;
+using IJsonService = Services.IJsonService;
 
 /// <inheritdoc/>
 internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
@@ -190,7 +191,7 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
         });
 
         atlasData.Name = atlasName;
-        atlasData.FilePath = atlasDataFilePath;
+        atlasData.FilePath = atlasImageFilePath;
         atlasData.Texture = atlasTexture;
 
         return atlasData;
@@ -199,10 +200,9 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
     /// <inheritdoc cref="IUnloader{T}.Unload"/>
     public void Unload(IAsepriteAtlasData atlasData)
     {
-        throw new Exception("The method needs to be implemented properly.");
-        // this.disposeReactable.Push(PushNotifications.TextureDisposedId, new DisposeTextureData { TextureId = atlasData.Texture.Id });
-        // var cacheKey = atlasData.FilePath;
-        // this.atlasCache.TryRemove(cacheKey, out _);
+        this.disposeReactable.Push(PushNotifications.TextureDisposedId, new DisposeTextureData { TextureId = atlasData.Texture.Id });
+        var cacheKey = atlasData.FilePath;
+        this.atlasCache.TryRemove(cacheKey, out _);
     }
 
     /// <summary>

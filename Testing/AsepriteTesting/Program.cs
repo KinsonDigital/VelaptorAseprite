@@ -5,7 +5,7 @@ using VelaptorAseprite.Data;
 
 // var frame = new AnimationFrame();
 //
-// var filePath = Path.Combine(AppContext.BaseDirectory, "Content", "Atlas", "FrameData.json");
+// var filePath = Path.Combine(AppContext.BaseDirectory, "Content", "Atlas", "bouncing-ball.json");
 // var jsonData = File.ReadAllText(filePath);
 //
 //
