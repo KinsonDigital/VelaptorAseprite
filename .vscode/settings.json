@@ -1,7 +1,32 @@
 {
+    "deno.enablePaths": [
+        "./DevTools/"
+    ],
     "cSpell.words": [
         "Aseprite",
+        "binlog",
+        "buildtransitive",
+        "CICD",
+        "contentfiles",
+        "ebug",
+        "elease",
+        "eleases",
+        "esult",
+        "fluentassertions",
         "Kinson",
+        "kinsondigital",
+        "nums",
+        "nunit",
+        "Reactable",
+        "Reactables",
+        "REPONAME",
+        "RGBA",
+        "simpleinjector",
+        "snupkg",
+        "stylecop",
+        "uild",
+        "Unsubscriber",
+        "Velap",
         "Velaptor",
         "Xunit"
     ],
