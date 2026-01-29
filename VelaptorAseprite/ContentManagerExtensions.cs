@@ -14,6 +14,7 @@ using Data;
 [ExcludeFromCodeCoverage(Justification = $"Cannot test due to direct interaction with the '{nameof(SimpleInjector)}' library.")]
 public static class ContentManagerExtensions
 {
+#pragma warning disable IDE0060 // Remove unused parameter
     /// <summary>
     /// Loads an aseprite atlas data file.
     /// </summary>
@@ -42,4 +43,5 @@ public static class ContentManagerExtensions
 
         atlasLoader.Unload(atlasData);
     }
+#pragma warning restore IDE0060 // Remove unused parameter
 }
