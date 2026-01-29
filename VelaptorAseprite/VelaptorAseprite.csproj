@@ -22,6 +22,9 @@
   <ItemGroup>
     <InternalsVisibleTo Include="AsepriteTesting" />
     <InternalsVisibleTo Include="VelaptorAsepriteTests" />
+
+    <!-- Allows the DynamicProxyGenAssembly2 assembly used by NSubstitute to access internal members for mocking -->
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 
   <ItemGroup>
