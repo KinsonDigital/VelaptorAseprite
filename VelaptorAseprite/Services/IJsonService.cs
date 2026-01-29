@@ -7,7 +7,7 @@ namespace VelaptorAseprite.Services;
 /// <summary>
 /// Deserializes JSON data.
 /// </summary>
-public interface IJsonService
+internal interface IJsonService
 {
     /// <summary>
     /// Parses the text representing a single JSON value into a <typeparamref name="T"/> value.
