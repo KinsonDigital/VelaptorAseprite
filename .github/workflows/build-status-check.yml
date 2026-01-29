@@ -1,0 +1,58 @@
+name: ✅Build Status Check
+run-name: ✅Build Status Check (${{ github.base_ref }} branch)
+
+
+defaults:
+  run:
+    shell: pwsh
+
+
+on:
+  pull_request:
+    branches: [main, preview]
+
+
+jobs:
+  build_velaptor_aseprite:
+    name: Build VelaptorAseprite Status Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set Up .NET SDK (${{ vars.NET_SDK_VERSION }})
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ vars.NET_SDK_VERSION }}
+
+      - name: Run Build
+        run: dotnet build "${{ github.workspace }}/${{ vars.PROJECT_NAME }}/${{ vars.PROJECT_NAME }}.csproj" -c Debug;
+
+
+  build_velaptor_aseprite_tests:
+    name: Build VelaptorAseprite Tests Status Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set Up .NET SDK (${{ vars.NET_SDK_VERSION }})
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ vars.NET_SDK_VERSION }}
+
+      - name: Run Build
+        run: dotnet build "${{ github.workspace }}/Testing/${{ vars.PROJECT_NAME }}Tests/${{ vars.PROJECT_NAME }}Tests.csproj" -c Debug;
+
+
+  build_velaptor_aseprite_testing:
+    name: Build VelaptorAseprite Testing Status Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set Up .NET SDK (${{ vars.NET_SDK_VERSION }})
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ vars.NET_SDK_VERSION }}
+
+      - name: Run Build
+        run: dotnet build "${{ github.workspace }}/Testing/${{ vars.PROJECT_NAME }}Testing/${{ vars.PROJECT_NAME }}Testing.csproj" -c Debug;
