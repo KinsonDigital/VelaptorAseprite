@@ -52,7 +52,7 @@ public interface IAsepriteAtlasData : IContent, IUpdatable
     /// </summary>
     /// <remarks>
     /// Use <see cref="LoopingBehavior.Infinite"/> for continuous looping,
-    /// <see cref="LoopingBehavior.None"/> for single playthrough,
+    /// <see cref="LoopingBehavior.None"/> for single play through,
     /// or <see cref="LoopingBehavior.Count"/> to loop a specific number of times set by <see cref="MaxLoops"/>.
     /// </remarks>
     LoopingBehavior LoopingBehavior { get; set; }

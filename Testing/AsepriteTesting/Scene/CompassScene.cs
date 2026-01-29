@@ -183,7 +183,6 @@ public class CompassScene : SceneBase
         var screenCenterX = (int)(WindowSize.Width / 2);
         var screenCenterY = (int)(WindowSize.Height / 2);
         var screenOneEighthHeightY = (int)(WindowSize.Height / 8);
-        var nextTextPosY = 0f;
 
         // Render instructions
         var instructionsText = "Press space to 'start/stop' animation\n";
@@ -199,7 +198,7 @@ public class CompassScene : SceneBase
         // Render current frame index
         var currentFrameIndexText = $"Current Frame: {this.atlasData.CurrentFrameIndex}";
         var currentFrameIndexTextSize = this.font.Measure(currentFrameIndexText);
-        nextTextPosY = (screenOneEighthHeightY * 5) + offsetY;
+        var nextTextPosY = (screenOneEighthHeightY * 5f) + offsetY;
         this.fontRenderer.Render(
             this.font,
             currentFrameIndexText,

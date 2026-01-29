@@ -11,12 +11,8 @@ public static class Field
     public static TFieldType GetFieldValue<TInstance, TFieldType>(string name, TInstance instance)
     {
         var type = instance.GetType();
-        var field = type.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic);
-
-        if (field is null)
-        {
-            throw new Exception($"The field {name} does not exist in the instance.");
-        }
+        var field = type.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new Exception($"The field {name} does not exist in the instance.");
 
         var fieldValue = field.GetValue(instance);
 
@@ -31,12 +27,8 @@ public static class Field
     public static void SetFieldValue<TInstance, TFieldType>(string name, TInstance instance, TFieldType value)
     {
         var type = instance.GetType();
-        var field = type.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic);
-
-        if (field is null)
-        {
-            throw new Exception($"The field {name} does not exist in the instance.");
-        }
+        var field = type.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new Exception($"The field {name} does not exist in the instance.");
 
         if (field.FieldType != typeof(TFieldType))
         {

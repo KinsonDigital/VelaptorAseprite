@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 /// <summary>
-/// Converts the Asesprite frame data or value to or from JSON.
+/// Converts the Aseprite frame data or value to or from JSON.
 /// </summary>
 [ExcludeFromCodeCoverage(Justification = "JSON processing is not possible to test.")]
 internal class FramesJsonConverter : JsonConverter<Dictionary<int, AnimationFrame>>
@@ -43,13 +43,7 @@ internal class FramesJsonConverter : JsonConverter<Dictionary<int, AnimationFram
                 continue;
             }
 
-            var propName = reader.GetString();
-
-            if (propName == null)
-            {
-                throw new JsonException("Null property name");
-            }
-
+            var propName = reader.GetString() ?? throw new JsonException("Null property name");
             var key = int.Parse(propName);
 
             // move to the value token and deserialize TValue
