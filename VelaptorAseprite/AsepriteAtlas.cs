@@ -1,4 +1,4 @@
-// <copyright file="AsepriteAtlasData.cs" company="KinsonDigital">
+// <copyright file="AsepriteAtlas.cs" company="KinsonDigital">
 // Copyright (c) KinsonDigital. All rights reserved.
 // </copyright>
 
@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 using Data;
 
 /// <inheritdoc/>
-internal class AsepriteAtlasData : IAsepriteAtlasData
+internal class AsepriteAtlas : IAsepriteAtlas
 {
     private int currentFrameElapsedMs;
     private LoopingBehavior loopingBehavior = LoopingBehavior.Infinite;

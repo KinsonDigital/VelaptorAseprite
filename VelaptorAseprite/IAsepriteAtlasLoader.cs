@@ -10,11 +10,11 @@ using Velaptor.Content;
 /// <summary>
 /// Loads Aseprite texture atlas data.
 /// </summary>
-internal interface IAsepriteAtlasLoader : IUnloader<IAsepriteAtlasData>
+internal interface IAsepriteAtlasLoader : IUnloader<IAsepriteAtlas>
 {
     /// <inheritdoc cref="IAtlasLoader.TotalCachedItems"/>
     int TotalCachedItems { get; }
 
     /// <inheritdoc cref="IAtlasLoader.Load"/>
-    IAsepriteAtlasData Load(string atlasPathOrName);
+    IAsepriteAtlas Load(string atlasPathOrName);
 }

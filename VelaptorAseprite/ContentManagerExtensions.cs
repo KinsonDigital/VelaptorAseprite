@@ -22,7 +22,7 @@ public static class ContentManagerExtensions
     /// <param name="pathOrName">The full qualified path or name of the atlas content to load.</param>
     /// <returns>The Aseprite atlas data.</returns>
     [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Only used to apply extension method.")]
-    public static IAsepriteAtlasData LoadAsepriteAtlasData(this IContentManager value, string pathOrName)
+    public static IAsepriteAtlas LoadAsepriteAtlas(this IContentManager value, string pathOrName)
     {
         var atlasLoader = IoC.Container.GetInstance<IAsepriteAtlasLoader>();
 
@@ -32,16 +32,16 @@ public static class ContentManagerExtensions
     }
 
     /// <summary>
-    /// Unloads the given <paramref name="atlasData"/>.
+    /// Unloads the given <paramref name="atlas"/>.
     /// </summary>
     /// <param name="value">The content manager.</param>
-    /// <param name="atlasData">The Aseprite atlas data to unload.</param>
+    /// <param name="atlas">The Aseprite atlas data to unload.</param>
     [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Only used to apply extension method.")]
-    public static void UnloadAsepriteAtlasData(this IContentManager value, IAsepriteAtlasData atlasData)
+    public static void UnloadAsepriteAtlas(this IContentManager value, IAsepriteAtlas atlas)
     {
         var atlasLoader = IoC.Container.GetInstance<IAsepriteAtlasLoader>();
 
-        atlasLoader.Unload(atlasData);
+        atlasLoader.Unload(atlas);
     }
 #pragma warning restore IDE0060 // Remove unused parameter
 }

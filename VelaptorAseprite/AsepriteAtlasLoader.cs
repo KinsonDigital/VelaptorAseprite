@@ -24,7 +24,7 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
 {
     private const string TextureExtension = ".png";
     private const string AtlasDataExtension = ".json";
-    private readonly ConcurrentDictionary<string, (ITexture atlasTexture, AsepriteAtlasData subTextureData)> atlasCache = new ();
+    private readonly ConcurrentDictionary<string, (ITexture atlasTexture, AsepriteAtlas subTextureData)> atlasCache = new ();
     private readonly IPushReactable<DisposeTextureData> disposeReactable;
     private readonly IDisposable unsubscriber;
     private readonly ITextureFactory textureFactory;
@@ -124,7 +124,7 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
     ///     <item>C:/Atlas/MyAtlas.txt</item>
     /// </list>
     /// </remarks>
-    public IAsepriteAtlasData Load(string atlasPathOrName)
+    public IAsepriteAtlas Load(string atlasPathOrName)
     {
         ArgumentException.ThrowIfNullOrEmpty(atlasPathOrName);
 
@@ -178,10 +178,10 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
             ? name
             : atlasPathOrName;
 
-        (ITexture atlasTexture, AsepriteAtlasData atlasData) = this.atlasCache.GetOrAdd(atlasImageFilePath, (_) =>
+        (ITexture atlasTexture, AsepriteAtlas atlasData) = this.atlasCache.GetOrAdd(atlasImageFilePath, (_) =>
         {
             var rawData = this.file.ReadAllText(atlasDataFilePath);
-            var atlasData = this.jsonService.Deserialize<AsepriteAtlasData>(rawData)
+            var atlasData = this.jsonService.Deserialize<AsepriteAtlas>(rawData)
                 ?? throw new LoadContentException($"There was an issue deserializing the JSON atlas data file at '{atlasDataFilePath}'.");
 
             var atlasImageData = this.imageService.Load(atlasImageFilePath);
@@ -198,10 +198,10 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
     }
 
     /// <inheritdoc cref="IUnloader{T}.Unload"/>
-    public void Unload(IAsepriteAtlasData atlasData)
+    public void Unload(IAsepriteAtlas atlas)
     {
-        this.disposeReactable.Push(PushNotifications.TextureDisposedId, new DisposeTextureData { TextureId = atlasData.Texture.Id });
-        var cacheKey = atlasData.FilePath;
+        this.disposeReactable.Push(PushNotifications.TextureDisposedId, new DisposeTextureData { TextureId = atlas.Texture.Id });
+        var cacheKey = atlas.FilePath;
         this.atlasCache.TryRemove(cacheKey, out _);
     }
 

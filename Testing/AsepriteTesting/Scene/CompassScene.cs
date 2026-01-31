@@ -28,7 +28,7 @@ public class CompassScene : SceneBase
     private readonly ITextureRenderer textureRenderer;
     private readonly IFontRenderer fontRenderer;
     private readonly IAppInput<KeyboardState> keyboard;
-    private IAsepriteAtlasData? atlasData;
+    private IAsepriteAtlas? atlasData;
     private IFont? font;
     private KeyboardState prevKeyboardState;
     private int animationSpeedMs = 100;
@@ -48,7 +48,7 @@ public class CompassScene : SceneBase
     /// <inheritdoc cref="SceneBase" />
     public override void LoadContent()
     {
-        this.atlasData = this.contentManager.LoadAsepriteAtlasData("compass");
+        this.atlasData = this.contentManager.LoadAsepriteAtlas("compass");
         this.atlasData.MaxLoops = 4;
         this.atlasData.LoopingBehavior = LoopingBehavior.None;
 
@@ -62,7 +62,7 @@ public class CompassScene : SceneBase
     {
         if (this.atlasData is not null)
         {
-            this.contentManager.UnloadAsepriteAtlasData(this.atlasData);
+            this.contentManager.UnloadAsepriteAtlas(this.atlasData);
         }
 
         if (this.font is not null)

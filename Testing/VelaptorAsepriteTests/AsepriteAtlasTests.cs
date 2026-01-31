@@ -1,4 +1,4 @@
-﻿// <copyright file="AsepriteAtlasDataTests.cs" company="KinsonDigital">
+﻿// <copyright file="AsepriteAtlasTests.cs" company="KinsonDigital">
 // Copyright (c) KinsonDigital. All rights reserved.
 // </copyright>
 
@@ -14,9 +14,9 @@ using VelaptorAseprite;
 using VelaptorAseprite.Data;
 
 /// <summary>
-/// Tests the <see cref="AsepriteAtlasData"/> class.
+/// Tests the <see cref="AsepriteAtlas"/> class.
 /// </summary>
-public class AsepriteAtlasDataTests
+public class AsepriteAtlasTests
 {
     private const int AnimationDuration = 16;
 
@@ -183,7 +183,7 @@ public class AsepriteAtlasDataTests
 
         // Act
         sut.Reset();
-        var currentFrameElapsesMs = Field.GetFieldValue<AsepriteAtlasData, int>("currentFrameElapsedMs", sut);
+        var currentFrameElapsesMs = Field.GetFieldValue<AsepriteAtlas, int>("currentFrameElapsedMs", sut);
 
         // Assert
         sut.CurrentFrameIndex.Should().Be(0);
@@ -254,7 +254,7 @@ public class AsepriteAtlasDataTests
         sut.Update(default(FrameTime).SetMs(AnimationDuration));
 
         // Assert
-        var elapsedFrameTimeMs = Field.GetFieldValue<AsepriteAtlasData, int>("currentFrameElapsedMs", sut);
+        var elapsedFrameTimeMs = Field.GetFieldValue<AsepriteAtlas, int>("currentFrameElapsedMs", sut);
         sut.CurrentFrameIndex.Should().Be(expectedFrameIndex);
         elapsedFrameTimeMs.Should().Be(expectedElapsedFrameTimeMs);
         sut.TotalLoops.Should().Be(expectedTotalLoops);
@@ -330,7 +330,7 @@ public class AsepriteAtlasDataTests
         sut.Update(default(FrameTime).SetMs(AnimationDuration));
 
         // Assert
-        Field.GetFieldValue<AsepriteAtlasData, int>("currentFrameElapsedMs", sut)
+        Field.GetFieldValue<AsepriteAtlas, int>("currentFrameElapsedMs", sut)
             .Should().Be(AnimationDuration);
     }
 
@@ -360,7 +360,7 @@ public class AsepriteAtlasDataTests
         sut.TotalLoops.Should().Be(0);
         sut.CurrentLoopCount.Should().Be(0);
         sut.IsAnimating.Should().Be(expectedIsAnimating);
-        Field.GetFieldValue<AsepriteAtlasData, int>("currentFrameElapsedMs", sut)
+        Field.GetFieldValue<AsepriteAtlas, int>("currentFrameElapsedMs", sut)
             .Should().Be(AnimationDuration);
     }
 
@@ -386,7 +386,7 @@ public class AsepriteAtlasDataTests
         sut.TotalLoops.Should().Be(1);
         sut.CurrentLoopCount.Should().Be(0);
         sut.IsAnimating.Should().Be(false);
-        Field.GetFieldValue<AsepriteAtlasData, int>("currentFrameElapsedMs", sut)
+        Field.GetFieldValue<AsepriteAtlas, int>("currentFrameElapsedMs", sut)
             .Should().Be(0);
     }
 
@@ -413,7 +413,7 @@ public class AsepriteAtlasDataTests
         sut.TotalLoops.Should().Be(1);
         sut.CurrentLoopCount.Should().Be(0);
         sut.IsAnimating.Should().Be(false);
-        Field.GetFieldValue<AsepriteAtlasData, int>("currentFrameElapsedMs", sut)
+        Field.GetFieldValue<AsepriteAtlas, int>("currentFrameElapsedMs", sut)
             .Should().Be(0);
     }
     #endregion
@@ -454,10 +454,10 @@ public class AsepriteAtlasDataTests
     }
 
     /// <summary>
-    /// Creates a new instance of <see cref="AsepriteAtlasData"/> for the purpose of testing.
+    /// Creates a new instance of <see cref="AsepriteAtlas"/> for the purpose of testing.
     /// </summary>
     /// <returns>The instance to test.</returns>
-    private static AsepriteAtlasData CreateSystemUnderTest()
+    private static AsepriteAtlas CreateSystemUnderTest()
         => new ()
         {
             Texture = Substitute.For<ITexture>(),

@@ -1,4 +1,4 @@
-// <copyright file="IAsepriteAtlasData.cs" company="KinsonDigital">
+// <copyright file="IAsepriteAtlas.cs" company="KinsonDigital">
 // Copyright (c) KinsonDigital. All rights reserved.
 // </copyright>
 
@@ -11,7 +11,7 @@ using Velaptor.Content;
 /// Represents atlas data exported from Aseprite, providing animation playback capabilities
 /// for sprite sheet textures.
 /// </summary>
-public interface IAsepriteAtlasData : IContent, IUpdatable
+public interface IAsepriteAtlas : IContent, IUpdatable
 {
     /// <summary>
     /// Gets the texture containing the sprite sheet atlas image.

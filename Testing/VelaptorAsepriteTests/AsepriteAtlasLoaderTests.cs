@@ -299,7 +299,7 @@ public class AsepriteAtlasLoaderTests
                 }
             },
         };
-        var atlasData = new AsepriteAtlasData
+        var atlasData = new AsepriteAtlas
         {
             Texture = texture,
             Name = "test-name",
@@ -328,7 +328,7 @@ public class AsepriteAtlasLoaderTests
         this.mockPath.Combine(fullDirPath, $"{AtlasTextureContentName}{AtlasDataExtension}").Returns(rootedAtlasDataPath);
         this.mockPath.Combine(fullDirPath, $"{AtlasTextureContentName}{AtlasTextureExtension}").Returns(rootedAtlasTexturePath);
         this.mockFile.ReadAllText(rootedAtlasDataPath).Returns("json-data");
-        this.mockJsonService.Deserialize<AsepriteAtlasData>(Arg.Any<string>()).Returns(atlasData);
+        this.mockJsonService.Deserialize<AsepriteAtlas>(Arg.Any<string>()).Returns(atlasData);
         this.mockImageService.Load(Arg.Any<string>()).Returns(imgData);
         this.mockTextureFactory.Create(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<ImageData>()).Returns(texture);
 
@@ -344,7 +344,7 @@ public class AsepriteAtlasLoaderTests
         this.mockPath.Received(1).Combine(fullDirPath, $"{AtlasTextureContentName}{AtlasDataExtension}");
         this.mockPath.Received(1).Combine(fullDirPath, $"{AtlasTextureContentName}{AtlasTextureExtension}");
         this.mockFile.Received(1).ReadAllText(rootedAtlasDataPath);
-        this.mockJsonService.Received(1).Deserialize<AsepriteAtlasData>(Arg.Any<string>());
+        this.mockJsonService.Received(1).Deserialize<AsepriteAtlas>(Arg.Any<string>());
         this.mockImageService.Received(1).Load(rootedAtlasTexturePath);
         this.mockTextureFactory.Received(1).Create(AtlasTextureContentName, rootedAtlasTexturePath, imgData);
         sut.TotalCachedItems.Should().Be(1);
@@ -378,7 +378,7 @@ public class AsepriteAtlasLoaderTests
                 }
             },
         };
-        var atlasData = new AsepriteAtlasData
+        var atlasData = new AsepriteAtlas
         {
             Texture = mockTexture,
             Name = "test-name",
@@ -407,7 +407,7 @@ public class AsepriteAtlasLoaderTests
         this.mockPath.Combine(fullDirPath, $"{AtlasTextureContentName}{AtlasDataExtension}").Returns(rootedAtlasDataPath);
         this.mockPath.Combine(fullDirPath, $"{AtlasTextureContentName}{AtlasTextureExtension}").Returns(rootedAtlasTexturePath);
         this.mockFile.ReadAllText(rootedAtlasDataPath).Returns("json-data");
-        this.mockJsonService.Deserialize<AsepriteAtlasData>(Arg.Any<string>()).Returns(atlasData);
+        this.mockJsonService.Deserialize<AsepriteAtlas>(Arg.Any<string>()).Returns(atlasData);
         this.mockImageService.Load(Arg.Any<string>()).Returns(imgData);
         this.mockTextureFactory.Create(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<ImageData>()).Returns(mockTexture);
 
@@ -421,7 +421,7 @@ public class AsepriteAtlasLoaderTests
         this.mockPath.Received(1).Combine(fullDirPath, $"{AtlasTextureContentName}{AtlasDataExtension}");
         this.mockPath.Received(1).Combine(fullDirPath, $"{AtlasTextureContentName}{AtlasTextureExtension}");
         this.mockFile.Received(1).ReadAllText(rootedAtlasDataPath);
-        this.mockJsonService.Received(1).Deserialize<AsepriteAtlasData>(Arg.Any<string>());
+        this.mockJsonService.Received(1).Deserialize<AsepriteAtlas>(Arg.Any<string>());
         this.mockImageService.Received(1).Load(rootedAtlasTexturePath);
         this.mockTextureFactory.Received(1).Create(AtlasTextureContentName, rootedAtlasTexturePath, imgData);
         sut.TotalCachedItems.Should().Be(1);
@@ -509,7 +509,7 @@ public class AsepriteAtlasLoaderTests
         mockTexture.Id.Returns(TextureId);
 
         var atlasData = CreateAtlasData(mockTexture, dataFilePath);
-        var mockAtlasData = Substitute.For<IAsepriteAtlasData>();
+        var mockAtlasData = Substitute.For<IAsepriteAtlas>();
         mockAtlasData.Texture.Returns(mockTexture);
         mockAtlasData.FilePath.Returns(textureFilePath);
 
@@ -520,7 +520,7 @@ public class AsepriteAtlasLoaderTests
         this.mockPath.Combine(contentDirPath, AtlasDataFileName).Returns(dataFilePath);
         this.mockPath.Combine(contentDirPath, AtlasTextureFileName).Returns(textureFilePath);
         this.mockFile.Exists(Arg.Any<string>()).Returns(true);
-        this.mockJsonService.Deserialize<AsepriteAtlasData>(Arg.Any<string>()).Returns(atlasData);
+        this.mockJsonService.Deserialize<AsepriteAtlas>(Arg.Any<string>()).Returns(atlasData);
 
         var sut = CreateSystemUnderTest();
         sut.Load(AtlasTextureContentName);
@@ -531,7 +531,7 @@ public class AsepriteAtlasLoaderTests
         // Assert
         var atlasCacheField = Field.GetFieldValue<
             AsepriteAtlasLoader,
-            ConcurrentDictionary<string, (ITexture atlasTexture, AsepriteAtlasData subTextureData)>>("atlasCache", sut);
+            ConcurrentDictionary<string, (ITexture atlasTexture, AsepriteAtlas subTextureData)>>("atlasCache", sut);
         _ = mockTexture.Received(1).Id;
         _ = mockAtlasData.Received(1).FilePath;
         atlasCacheField.Count.Should().Be(0);
@@ -573,7 +573,7 @@ public class AsepriteAtlasLoaderTests
         this.mockPath.Combine(contentDirPath, AtlasDataFileName).Returns(dataFilePath);
         this.mockPath.Combine(contentDirPath, AtlasTextureFileName).Returns(textureFilePath);
         this.mockFile.Exists(Arg.Any<string>()).Returns(true);
-        this.mockJsonService.Deserialize<AsepriteAtlasData>(Arg.Any<string>()).Returns(atlasData);
+        this.mockJsonService.Deserialize<AsepriteAtlas>(Arg.Any<string>()).Returns(atlasData);
         this.mockTextureFactory.Create(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<ImageData>()).Returns(mockTexture);
 
         var sut = CreateSystemUnderTest();
@@ -596,7 +596,7 @@ public class AsepriteAtlasLoaderTests
     /// <param name="texture">The texture.</param>
     /// <param name="dataFilePath">The atlas data file path.</param>
     /// <returns>The atlas data.</returns>
-    private static AsepriteAtlasData CreateAtlasData(ITexture texture, string dataFilePath)
+    private static AsepriteAtlas CreateAtlasData(ITexture texture, string dataFilePath)
     {
         var frames = new Dictionary<int, AnimationFrame>
         {
@@ -614,7 +614,7 @@ public class AsepriteAtlasLoaderTests
             },
         };
 
-        var atlasData = new AsepriteAtlasData
+        var atlasData = new AsepriteAtlas
         {
             Texture = texture,
             Name = "test-name",

@@ -31,7 +31,7 @@ public class BouncingBallScene : SceneBase
     private readonly IFontRenderer fontRenderer;
     private readonly ILineRenderer lineRenderer;
     private readonly IAppInput<KeyboardState> keyboard;
-    private IAsepriteAtlasData? atlasData;
+    private IAsepriteAtlas? atlasData;
     private IFont? font;
     private KeyboardState prevKeyboardState;
     private float velocityY = 100f;
@@ -55,7 +55,7 @@ public class BouncingBallScene : SceneBase
     /// <inheritdoc cref="SceneBase" />
     public override void LoadContent()
     {
-        this.atlasData = this.contentManager.LoadAsepriteAtlasData("bouncing-ball-squish");
+        this.atlasData = this.contentManager.LoadAsepriteAtlas("bouncing-ball-squish");
         this.atlasData.LoopingBehavior = LoopingBehavior.None;
         this.maxBallHeight = this.atlasData.Frames.Max(i => i.Value.Bounds.Height * RenderScale);
 
@@ -69,7 +69,7 @@ public class BouncingBallScene : SceneBase
     {
         if (this.atlasData is not null)
         {
-            this.contentManager.UnloadAsepriteAtlasData(this.atlasData);
+            this.contentManager.UnloadAsepriteAtlas(this.atlasData);
         }
 
         if (this.font is not null)
