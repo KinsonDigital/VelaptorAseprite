@@ -15,6 +15,11 @@ internal interface IAsepriteAtlasLoader : IUnloader<IAsepriteAtlas>
     /// <inheritdoc cref="IAtlasLoader.TotalCachedItems"/>
     int TotalCachedItems { get; }
 
-    /// <inheritdoc cref="IAtlasLoader.Load"/>
-    IAsepriteAtlas Load(string atlasPathOrName);
+    /// <summary>
+    /// Loads Aseprite atlas data using the given <paramref name="atlasPathOrName" />.
+    /// </summary>
+    /// <param name="atlasPathOrName">The content name or file path to the atlas data.</param>
+    /// <param name="animationName">The name of the animation to load by default.</param>
+    /// <returns>The loaded atlas data.</returns>
+    IAsepriteAtlas Load(string atlasPathOrName, string? animationName = null);
 }

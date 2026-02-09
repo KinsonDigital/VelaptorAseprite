@@ -27,9 +27,12 @@ public class Game : Window
 
         var bouncingBallScene = new BouncingBallScene();
         var compassScene = new CompassScene();
+        var multipleScene = new MultipleScene();
 
         SceneManager.AddScene(bouncingBallScene, true);
         SceneManager.AddScene(compassScene);
+        SceneManager.AddScene(multipleScene);
+
         Title = "Aseprite Testing";
     }
 

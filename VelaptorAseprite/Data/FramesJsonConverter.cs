@@ -30,6 +30,7 @@ internal class FramesJsonConverter : JsonConverter<Dictionary<int, AnimationFram
         }
 
         var dict = new Dictionary<int, AnimationFrame>();
+        var frameIndex = 0;
 
         while (reader.Read())
         {
@@ -43,14 +44,12 @@ internal class FramesJsonConverter : JsonConverter<Dictionary<int, AnimationFram
                 continue;
             }
 
-            var propName = reader.GetString() ?? throw new JsonException("Null property name");
-            var key = int.Parse(propName);
-
             // move to the value token and deserialize TValue
             reader.Read();
             var value = JsonSerializer.Deserialize<AnimationFrame>(ref reader, options);
 
-            dict[key] = value ?? throw new JsonException("Deserialized value was null.");
+            dict[frameIndex] = value ?? throw new JsonException("Deserialized value was null.");
+            frameIndex += 1;
         }
 
         throw new JsonException("Unexpected end of JSON while reading dictionary");

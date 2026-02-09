@@ -20,13 +20,17 @@ public static class ContentManagerExtensions
     /// </summary>
     /// <param name="value">The content manager.</param>
     /// <param name="pathOrName">The full qualified path or name of the atlas content to load.</param>
+    /// <param name="animationName">The name of the animation to play.</param>
     /// <returns>The Aseprite atlas data.</returns>
+    /// <remarks>
+    /// If no <paramref name="animationName"/> is provided, then all frames will be played regardless of the animation.
+    /// </remarks>
     [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Only used to apply extension method.")]
-    public static IAsepriteAtlas LoadAsepriteAtlas(this IContentManager value, string pathOrName)
+    public static IAsepriteAtlas LoadAsepriteAtlas(this IContentManager value, string pathOrName, string? animationName = null)
     {
         var atlasLoader = IoC.Container.GetInstance<IAsepriteAtlasLoader>();
 
-        var atlasData = atlasLoader.Load(pathOrName);
+        var atlasData = atlasLoader.Load(pathOrName, animationName);
 
         return atlasData;
     }

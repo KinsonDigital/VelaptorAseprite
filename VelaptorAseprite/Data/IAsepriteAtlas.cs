@@ -52,10 +52,15 @@ public interface IAsepriteAtlas : IContent, IUpdatable
     /// </summary>
     /// <remarks>
     /// Use <see cref="LoopingBehavior.Infinite"/> for continuous looping,
-    /// <see cref="LoopingBehavior.None"/> for single play through,
+    /// <see cref="LoopingBehavior.None"/> for single playthrough,
     /// or <see cref="LoopingBehavior.Count"/> to loop a specific number of times set by <see cref="MaxLoops"/>.
     /// </remarks>
     LoopingBehavior LoopingBehavior { get; set; }
+
+    /// <summary>
+    /// Gets or sets the name of the currently playing animation, or <c>null</c> if all frames are being played.
+    /// </summary>
+    string? AnimationName { get; set; }
 
     /// <summary>
     /// Gets the number of times the animation has looped since playback started.
@@ -100,13 +105,16 @@ public interface IAsepriteAtlas : IContent, IUpdatable
     void SetAnimationSpeed(int timeMs);
 
     /// <summary>
-    /// Starts or resumes the animation playback.
+    /// Starts or resumes the animation playback for a specific animation by the given <paramref name="animationName"/>.
     /// </summary>
+    /// <param name="animationName">The name of the animation to play.</param>
     /// <remarks>
     /// When <see cref="LoopingBehavior"/> is set to <see cref="VelaptorAseprite.LoopingBehavior.Count"/>,
     /// calling this method resets the <see cref="CurrentLoopCount"/> to zero.
+    /// <br />
+    /// If no <paramref name="animationName"/> is provided, then all frames will be played regardless of the animation.
     /// </remarks>
-    void Play();
+    void Play(string? animationName = null);
 
     /// <summary>
     /// Stops the animation playback at the current frame.

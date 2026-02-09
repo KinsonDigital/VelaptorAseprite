@@ -46,4 +46,10 @@ public class MetaData
     /// Gets or sets the scale factor applied to the sprite sheet during export.
     /// </summary>
     public required string Scale { get; set; }
+
+    /// <summary>
+    /// Gets the frame tag meta-data.
+    /// </summary>
+    [JsonPropertyName("frameTags")]
+    public FrameTag[] Tags { get; init; } = [];
 }

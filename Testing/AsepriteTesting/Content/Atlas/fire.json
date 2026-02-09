@@ -1,0 +1,151 @@
+{ "frames": {
+   "fire-0": {
+    "frame": { "x": 0, "y": 0, "w": 25, "h": 21 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 5, "y": 7, "w": 25, "h": 21 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 150
+   },
+   "fire-1": {
+    "frame": { "x": 25, "y": 0, "w": 22, "h": 21 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 8, "y": 7, "w": 22, "h": 21 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 150
+   },
+   "fire-2": {
+    "frame": { "x": 47, "y": 0, "w": 25, "h": 22 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 5, "y": 6, "w": 25, "h": 22 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 150
+   },
+   "fire-3": {
+    "frame": { "x": 72, "y": 0, "w": 25, "h": 21 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 5, "y": 7, "w": 25, "h": 21 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 150
+   },
+   "fire-4": {
+    "frame": { "x": 97, "y": 0, "w": 25, "h": 22 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 5, "y": 6, "w": 25, "h": 22 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 150
+   },
+   "fire-5": {
+    "frame": { "x": 122, "y": 0, "w": 25, "h": 23 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 5, "y": 5, "w": 25, "h": 23 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 150
+   },
+   "fire-6": {
+    "frame": { "x": 147, "y": 0, "w": 25, "h": 22 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 5, "y": 6, "w": 25, "h": 22 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 150
+   },
+   "fire-7": {
+    "frame": { "x": 172, "y": 0, "w": 25, "h": 21 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 5, "y": 7, "w": 25, "h": 21 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 150
+   },
+   "spark-0": {
+    "frame": { "x": 0, "y": 23, "w": 1, "h": 1 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1, "h": 1 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 100
+   },
+   "spark-1": {
+    "frame": { "x": 1, "y": 23, "w": 2, "h": 2 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 52, "y": 65, "w": 2, "h": 2 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 100
+   },
+   "spark-2": {
+    "frame": { "x": 3, "y": 23, "w": 4, "h": 4 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 51, "y": 64, "w": 4, "h": 4 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 100
+   },
+   "spark-3": {
+    "frame": { "x": 7, "y": 23, "w": 10, "h": 10 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 48, "y": 61, "w": 10, "h": 10 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 100
+   },
+   "spark-4": {
+    "frame": { "x": 17, "y": 23, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 45, "y": 58, "w": 16, "h": 16 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 100
+   },
+   "spark-5": {
+    "frame": { "x": 33, "y": 23, "w": 22, "h": 22 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 42, "y": 55, "w": 22, "h": 22 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 100
+   },
+   "spark-6": {
+    "frame": { "x": 55, "y": 23, "w": 28, "h": 28 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 39, "y": 52, "w": 28, "h": 28 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 150
+   },
+   "spark-7": {
+    "frame": { "x": 83, "y": 23, "w": 32, "h": 32 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 37, "y": 50, "w": 32, "h": 32 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 150
+   },
+   "spark-8": {
+    "frame": { "x": 115, "y": 23, "w": 34, "h": 34 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 36, "y": 49, "w": 34, "h": 34 },
+    "sourceSize": { "w": 100, "h": 100 },
+    "duration": 150
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3.16.1-x64",
+  "image": "fire.png",
+  "format": "RGBA8888",
+  "size": { "w": 197, "h": 57 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "fire", "from": 0, "to": 7, "direction": "forward", "color": "#000000ff" },
+   { "name": "spark", "from": 8, "to": 16, "direction": "forward", "color": "#000000ff" }
+  ]
+ }
+}

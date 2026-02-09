@@ -123,8 +123,11 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
     ///     <item>C:/Atlas/MyAtlas</item>
     ///     <item>C:/Atlas/MyAtlas.txt</item>
     /// </list>
+    ///
+    /// <br />
+    /// If no <paramref name="animationName"/> is provided, then all frames will be played regardless of the animation.
     /// </remarks>
-    public IAsepriteAtlas Load(string atlasPathOrName)
+    public IAsepriteAtlas Load(string atlasPathOrName, string? animationName = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(atlasPathOrName);
 
@@ -183,6 +186,8 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
             var rawData = this.file.ReadAllText(atlasDataFilePath);
             var atlasData = this.jsonService.Deserialize<AsepriteAtlas>(rawData)
                 ?? throw new LoadContentException($"There was an issue deserializing the JSON atlas data file at '{atlasDataFilePath}'.");
+
+            atlasData.AnimationName = animationName;
 
             var atlasImageData = this.imageService.Load(atlasImageFilePath);
             var atlasTexture = this.textureFactory.Create(atlasName, atlasImageFilePath, atlasImageData);

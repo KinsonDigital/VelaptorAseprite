@@ -1,54 +1,47 @@
-﻿// <copyright file="BouncingBallScene.cs" company="KinsonDigital">
+﻿// <copyright file="MultipleScene.cs" company="KinsonDigital">
 // Copyright (c) KinsonDigital. All rights reserved.
 // </copyright>
 
 namespace AsepriteTesting.Scene;
 
-using System.Diagnostics;
-using Velaptor;
-using Velaptor.Scene;
 using System.Drawing;
 using System.Numerics;
-using System.Linq;
+using Velaptor;
 using Velaptor.Content;
 using Velaptor.Content.Fonts;
 using Velaptor.Factories;
 using Velaptor.Graphics;
 using Velaptor.Graphics.Renderers;
 using Velaptor.Input;
+using Velaptor.Scene;
 using VelaptorAseprite;
 using VelaptorAseprite.Data;
 
 /// <summary>
-/// Used to test out simple animation behaviors, direction, speed, and more.
+/// Used to test out multiple animations in a single atlas.
 /// </summary>
-public class BouncingBallScene : SceneBase
+public class MultipleScene : SceneBase
 {
     private const string FontName = $"TimesNewRoman-{nameof(FontStyle.Regular)}.ttf";
     private const float RenderScale = 3f;
-    private const float MaxBounceHeight = 350f;
-    private const float VelocityYChange = 5;
+    private const string FireAnimation = "fire";
+    private const string SparkAnimation = "spark";
     private readonly IContentManager contentManager;
     private readonly ITextureRenderer textureRenderer;
     private readonly IFontRenderer fontRenderer;
-    private readonly ILineRenderer lineRenderer;
     private readonly IAppInput<KeyboardState> keyboard;
     private IAsepriteAtlas? atlasData;
     private IFont? font;
     private KeyboardState prevKeyboardState;
     private float velocityY = 100f;
-    private float ballPosY = MaxBounceHeight + 50;
-    private float animationSpeedMs = 0.25f;
-    private float maxBallHeight;
     private bool movingDown = true;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BouncingBallScene"/> class.
+    /// Initializes a new instance of the <see cref="MultipleScene"/> class.
     /// </summary>
-    public BouncingBallScene()
+    public  MultipleScene()
     {
         this.textureRenderer = RendererFactory.CreateTextureRenderer();
-        this.lineRenderer = RendererFactory.CreateLineRenderer();
         this.fontRenderer = RendererFactory.CreateFontRenderer();
         this.keyboard = HardwareFactory.GetKeyboard();
 
@@ -58,12 +51,8 @@ public class BouncingBallScene : SceneBase
     /// <inheritdoc cref="SceneBase" />
     public override void LoadContent()
     {
-        this.ballPosY = MaxBounceHeight + 50;
-        this.atlasData = this.contentManager.LoadAsepriteAtlas("bouncing-ball-squish");
+        this.atlasData = this.contentManager.LoadAsepriteAtlas(FireAnimation, SparkAnimation);
         this.atlasData.LoopingBehavior = LoopingBehavior.None;
-        this.atlasData.SetAnimationSpeed((int)this.animationSpeedMs);
-        this.maxBallHeight = this.atlasData.Frames.Max(i => i.Value.Bounds.Height * RenderScale);
-
         this.font = this.contentManager.LoadFont(FontName, 16);
 
         base.LoadContent();
@@ -90,14 +79,9 @@ public class BouncingBallScene : SceneBase
     {
         ProcessInput();
 
-        var ballHeight = this.maxBallHeight;
-        var ballHalfHeight = ballHeight / 2f;
-        var ballTop = this.ballPosY - ballHalfHeight;
-        var ballBottom = this.ballPosY + ballHalfHeight;
-
         var wasAnimating = this.atlasData.IsAnimating;
 
-        this.atlasData!.Update(frameTime);
+        this.atlasData.Update(frameTime);
 
         // Check if animation just finished (was enabled, now disabled)
         if (wasAnimating && !this.atlasData.IsAnimating)
@@ -107,48 +91,26 @@ public class BouncingBallScene : SceneBase
             this.movingDown = false;
         }
 
-        var winHeight = WindowSize.Height;
-
-        // Start the squish animation when the ball hits the bottom of the screen
-        if (ballBottom >= winHeight && !this.atlasData.IsAnimating && this.movingDown)
-        {
-            this.atlasData.Play();
-        }
-
-        // If animating, keep the ball positioned at the bottom based on current frame height
-        if (this.atlasData.IsAnimating)
-        {
-            var currentFrameBounds = this.atlasData.GetCurrentFrame().Bounds;
-            this.ballPosY = winHeight - (currentFrameBounds.Height / 2f * RenderScale);
-        }
-        else
-        {
-            // If the ball reaches the top bounce point, make it move down
-            if (ballTop < MaxBounceHeight && !this.movingDown)
-            {
-                this.movingDown = true;
-                this.velocityY = Math.Abs(this.velocityY);
-            }
-
-            // Move the ball using a velocity in pixels/sec scaled by the elapsed seconds
-            var delta = this.velocityY * (float)frameTime.ElapsedTime.TotalSeconds;
-            this.ballPosY += this.atlasData.Enabled ? delta : 0;
-        }
-
         base.Update(frameTime);
     }
 
     /// <inheritdoc cref="SceneBase" />
     public override void Render()
     {
+        if (this.atlasData is null)
+        {
+            throw new Exception("The atlas data has not been loaded yet.");
+        }
+
         var frame = this.atlasData!.GetCurrentFrame();
 
         var srcRect = frame.Bounds;
-        var destRect = new Rectangle(0, 0, (int)this.atlasData!.Texture.Width, (int)this.atlasData!.Texture.Height);
-        destRect.X = 400;
-        destRect.Y = (int)this.ballPosY;
+        var destRect = new Rectangle(0, 0, (int)(this.atlasData?.Texture.Width ?? 0), (int)(this.atlasData?.Texture.Height ?? 0));
+        destRect.X = WindowCenter.X;
+        destRect.Y = WindowCenter.Y;
 
-        this.textureRenderer.Render(this.atlasData!.Texture,
+        this.textureRenderer.Render(
+            this.atlasData!.Texture,
             srcRect,
             destRect,
             RenderScale,
@@ -165,16 +127,18 @@ public class BouncingBallScene : SceneBase
     {
         const int verticalSpacing = 15;
         var winWidth = (int)WindowSize.Width;
-        var line = new Line(new Vector2(0, MaxBounceHeight), new Vector2(winWidth, MaxBounceHeight), Color.CornflowerBlue);
-        this.lineRenderer.Render(line);
 
         var screenCenterX = (int)(WindowSize.Width / 2);
         var screenCenterY = (int)(WindowSize.Height / 2);
         var screenOneEighthHeightY = (int)(WindowSize.Height / 8);
 
+        var animationName = $"Animation Name: {this.atlasData.AnimationName}";
+        var animationNameSize = this.font.Measure(animationName);
+        var animationNamePosY = screenOneEighthHeightY * 6;
+
         var velocityText = $"Velocity: {this.velocityY}";
         var velocityTextSize = this.font.Measure(velocityText);
-        var velocityTextPosY = screenOneEighthHeightY * 5;
+        var velocityTextPosY = animationNamePosY + (int)animationNameSize.Height + verticalSpacing;
 
         var animationEnabledText = $"Animation Enabled: {this.atlasData.IsAnimating}";
         var animationEnabledTextSize = this.font.Measure(animationEnabledText);
@@ -190,7 +154,9 @@ public class BouncingBallScene : SceneBase
 
         var instructionWidths = new[]
         {
-            (int)velocityTextSize.Width, (int)animationEnabledTextSize.Width, (int)movingDownTextSize.Width, (int)currentFrameTextSize.Width,
+            (int)animationNameSize.Width,
+            (int)velocityTextSize.Width, (int)animationEnabledTextSize.Width,
+            (int)movingDownTextSize.Width, (int)currentFrameTextSize.Width,
         };
 
         var largestWidth = instructionWidths.Max();
@@ -199,11 +165,17 @@ public class BouncingBallScene : SceneBase
         var instructionsText = "Press space to 'start/stop' animation\n";
         instructionsText += "Press 'up' to speed up movement velocity\n";
         instructionsText += "Press 'down' to slow down movement velocity\n";
+        instructionsText += "Press 'left/right' to change animations";
 
         this.fontRenderer.Render(this.font,
             instructionsText,
             new Vector2(screenCenterX, screenCenterY - (screenOneEighthHeightY * 3)));
 
+        this.fontRenderer.Render(
+            this.font,
+            animationName,
+            winWidth - ((int)animationNameSize.Width / 2) - largestWidth,
+            animationNamePosY);
         this.fontRenderer.Render(
             this.font,
             velocityText,
@@ -235,61 +207,55 @@ public class BouncingBallScene : SceneBase
 
         if (currentKeyboardState.IsKeyUp(KeyCode.Space) && this.prevKeyboardState.IsKeyDown(KeyCode.Space))
         {
-            this.atlasData.Enabled = !this.atlasData.Enabled;
+            this.atlasData.LoopingBehavior = this.atlasData.AnimationName == FireAnimation
+                ? LoopingBehavior.Infinite
+                : LoopingBehavior.None;
+
+            if (this.atlasData.IsAnimating)
+            {
+                this.atlasData.Stop();
+            }
+            else
+            {
+                this.atlasData.Play();
+            }
         }
 
         if (currentKeyboardState.IsKeyUp(KeyCode.Up) && this.prevKeyboardState.IsKeyDown(KeyCode.Up))
         {
-            var oldVelocityY = this.velocityY;
-
-            this.velocityY = this.velocityY < 0
-                ? this.velocityY + -VelocityYChange
-                : this.velocityY + VelocityYChange;
-
-            var changePercent = 0f;
-
-            changePercent = (this.velocityY - oldVelocityY) / oldVelocityY;
-
-            // If the change increased
-            if (changePercent > 0)
-            {
-                this.animationSpeedMs -= this.animationSpeedMs * changePercent;
-            }
-            else
-            {
-                // Decreased
-                this.animationSpeedMs += this.animationSpeedMs * changePercent;
-            }
-
-            this.animationSpeedMs = this.animationSpeedMs < 0.25f ? 0.25f : this.animationSpeedMs;
         }
 
         if (currentKeyboardState.IsKeyUp(KeyCode.Down) && this.prevKeyboardState.IsKeyDown(KeyCode.Down))
         {
-            var oldVelocityY = this.velocityY;
+        }
 
-            this.velocityY = this.velocityY < 0
-                ? this.velocityY - -VelocityYChange
-                : this.velocityY - VelocityYChange;
+        // Switch animations
+        if (currentKeyboardState.IsKeyUp(KeyCode.Left) && this.prevKeyboardState.IsKeyDown(KeyCode.Left))
+        {
+            SwitchAnimation();
+        }
 
-            var changePercent = 0f;
-
-            changePercent = (this.velocityY - oldVelocityY) / oldVelocityY;
-
-            // If the change increased
-            if (changePercent > 0)
-            {
-                this.animationSpeedMs -= this.animationSpeedMs * changePercent;
-            }
-            else
-            {
-                // Decreased
-                this.animationSpeedMs += this.animationSpeedMs * changePercent;
-            }
-
-            this.animationSpeedMs = this.animationSpeedMs < 0.25f ? 0.25f : this.animationSpeedMs;
+        // Switch animations
+        if (currentKeyboardState.IsKeyUp(KeyCode.Right) && this.prevKeyboardState.IsKeyDown(KeyCode.Right))
+        {
+            SwitchAnimation();
         }
 
         this.prevKeyboardState = currentKeyboardState;
+    }
+
+    private void SwitchAnimation()
+    {
+        switch (this.atlasData.AnimationName)
+        {
+            case FireAnimation:
+                this.atlasData.AnimationName = SparkAnimation;
+                this.atlasData.LoopingBehavior = LoopingBehavior.Infinite;
+                break;
+            case SparkAnimation:
+                this.atlasData.AnimationName = FireAnimation;
+                this.atlasData.LoopingBehavior = LoopingBehavior.Infinite;
+                break;
+        }
     }
 }
