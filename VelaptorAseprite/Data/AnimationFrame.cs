@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 /// <summary>
 /// Represents a single frame of exported animation.
 /// </summary>
-public class AnimationFrame
+public sealed class AnimationFrame
 {
     /// <summary>
     /// Gets the bounding rectangle of the frame within the sprite sheet atlas.

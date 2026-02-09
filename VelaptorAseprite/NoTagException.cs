@@ -7,7 +7,7 @@ namespace VelaptorAseprite;
 /// <summary>
 /// Thrown when there is no Aseprite tag that exists.
 /// </summary>
-public class NoTagException : Exception
+public sealed class NoTagException : Exception
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="NoTagException"/> class.

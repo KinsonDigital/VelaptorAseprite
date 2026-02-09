@@ -12,7 +12,7 @@ using System.Text.Json.Serialization;
 /// <summary>
 /// Represents metadata information exported from an Aseprite sprite sheet atlas.
 /// </summary>
-public class MetaData
+public sealed class MetaData
 {
     /// <summary>
     /// Gets or sets the name of the application that exported the atlas data.

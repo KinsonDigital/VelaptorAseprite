@@ -7,7 +7,7 @@ namespace VelaptorAseprite.Data;
 /// <summary>
 /// A frame tag with tag meta-data.
 /// </summary>
-public class FrameTag
+public sealed class FrameTag
 {
     /// <summary>
     /// The name of the tag.
