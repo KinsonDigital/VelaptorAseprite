@@ -15,7 +15,15 @@ on:
 jobs:
   build_velaptor_aseprite:
     name: Build VelaptorAseprite Status Check
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: "windows-latest"
+          - platform: "ubuntu-latest"
+          - platform: "macos-latest" # for Arm based macs (M1 and above).
+          - platform: "macos-latest" # for Intel based macs.
+    runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v6
 
@@ -24,13 +32,31 @@ jobs:
         with:
           dotnet-version: ${{ vars.NET_SDK_VERSION }}
 
+      - name: Cache NuGet Packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.nuget/packages # The path where NuGet stores global packages on Linux
+          # The cache key: Includes OS and a hash of all project files
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }} # Use the hash for all .csproj files in the repository
+          # If an exact match isn't found, use the most recent cache starting with this prefix
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
       - name: Run Build
         run: dotnet build "${{ github.workspace }}/${{ vars.PROJECT_NAME }}/${{ vars.PROJECT_NAME }}.csproj" -c Debug;
 
 
   build_velaptor_aseprite_tests:
     name: Build VelaptorAseprite Tests Status Check
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: "windows-latest"
+          - platform: "ubuntu-latest"
+          - platform: "macos-latest" # for Arm based macs (M1 and above).
+          - platform: "macos-latest" # for Intel based macs.
+    runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v6
 
@@ -45,7 +71,15 @@ jobs:
 
   build_velaptor_aseprite_testing:
     name: Build VelaptorAseprite Testing Status Check
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: "windows-latest"
+          - platform: "ubuntu-latest"
+          - platform: "macos-latest" # for Arm based macs (M1 and above).
+          - platform: "macos-latest" # for Intel based macs.
+    runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v6
 
