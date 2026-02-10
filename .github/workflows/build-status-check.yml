@@ -55,4 +55,4 @@ jobs:
           dotnet-version: ${{ vars.NET_SDK_VERSION }}
 
       - name: Run Build
-        run: dotnet build "${{ github.workspace }}/Testing/${{ vars.PROJECT_NAME }}Testing/${{ vars.PROJECT_NAME }}Testing.csproj" -c Debug;
+        run: dotnet build "${{ github.workspace }}/Testing/AsepriteTesting/AsepriteTesting.csproj" -c Debug;
