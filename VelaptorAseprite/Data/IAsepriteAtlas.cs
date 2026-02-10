@@ -45,7 +45,12 @@ public interface IAsepriteAtlas : IContent, IUpdatable
     /// <summary>
     /// Gets the index of the current animation frame being displayed.
     /// </summary>
-    int CurrentFrameIndex { get; }
+    uint CurrentFrameIndex { get; }
+
+    /// <summary>
+    /// Gets the total number of frames that have ever been run.
+    /// </summary>
+    uint TotalFramesRan { get; }
 
     /// <summary>
     /// Gets or sets the looping behavior of the animation.
@@ -58,9 +63,12 @@ public interface IAsepriteAtlas : IContent, IUpdatable
     LoopingBehavior LoopingBehavior { get; set; }
 
     /// <summary>
-    /// Gets or sets the name of the currently playing animation, or <c>null</c> if all frames are being played.
+    /// Gets the name of the currently playing animation.
+    /// <remarks>
+    /// If the value is <c>string.IsNullOrEmpty</c>, then the entire animation will play.
+    /// </remarks>
     /// </summary>
-    string? AnimationName { get; set; }
+    string AnimationName { get; }
 
     /// <summary>
     /// Gets the number of times the animation has looped since playback started.

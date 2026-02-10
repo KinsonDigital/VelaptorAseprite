@@ -12,11 +12,10 @@ using Data;
 /// <inheritdoc/>
 internal class AsepriteAtlas : IAsepriteAtlas
 {
-    private int currentFrameElapsedMs;
+    private uint currentFrameElapsedMs;
     private LoopingBehavior loopingBehavior = LoopingBehavior.Infinite;
-    private int startingIndex;
-    private int endingIndex;
-    private string? animationNameValue;
+    private uint startingIndex;
+    private uint endingIndex;
 
     /// <inheritdoc/>
     public ITexture Texture { get; internal set; } = null!;
@@ -42,7 +41,10 @@ internal class AsepriteAtlas : IAsepriteAtlas
     public bool IsAnimating { get; internal set; }
 
     /// <inheritdoc/>
-    public int CurrentFrameIndex { get; internal set; }
+    public uint CurrentFrameIndex { get; internal set; }
+
+    /// <inheritdoc/>
+    public uint TotalFramesRan { get; private set; }
 
     /// <inheritdoc/>
     public LoopingBehavior LoopingBehavior
@@ -64,16 +66,7 @@ internal class AsepriteAtlas : IAsepriteAtlas
     }
 
     /// <inheritdoc/>
-    public string? AnimationName
-    {
-        get => this.animationNameValue;
-        set
-        {
-            this.animationNameValue = value;
-
-            SetIndexRange(this.animationNameValue);
-        }
-    }
+    public string AnimationName { get; internal set; } = string.Empty;
 
     /// <inheritdoc/>
     public uint CurrentLoopCount { get; internal set; }
@@ -82,13 +75,13 @@ internal class AsepriteAtlas : IAsepriteAtlas
     public uint MaxLoops { get; set; }
 
     /// <inheritdoc/>
-    public uint TotalLoops { get; set; }
+    public uint TotalLoops { get; private set; }
 
     /// <inheritdoc/>
     public AnimationDirection Direction { get; set; }
 
     /// <inheritdoc/>
-    public AnimationFrame GetCurrentFrame() => Frames[CurrentFrameIndex];
+    public AnimationFrame GetCurrentFrame() => Frames[(int)CurrentFrameIndex];
 
     /// <inheritdoc/>
     public void SetAnimationSpeed(int timeMs)
@@ -103,13 +96,16 @@ internal class AsepriteAtlas : IAsepriteAtlas
     /// <inheritdoc/>
     public void Play(string? animationName = null)
     {
+        if (IsAnimating)
+        {
+            return;
+        }
+
         IsAnimating = true;
 
-        if (animationName is not null)
-        {
-            AnimationName = animationName;
-            SetIndexRange(AnimationName);
-        }
+        AnimationName = string.IsNullOrEmpty(animationName) ? string.Empty : animationName;
+        SetIndexRange(AnimationName);
+        CurrentFrameIndex = CalcNextIndex(IsCycleComplete());
 
         if (LoopingBehavior == LoopingBehavior.Count)
         {
@@ -136,11 +132,13 @@ internal class AsepriteAtlas : IAsepriteAtlas
             return;
         }
 
-        var currentFrameDuration = Frames[CurrentFrameIndex].Duration;
+        var currentFrameDuration = Frames[(int)CurrentFrameIndex].Duration;
 
         if (this.currentFrameElapsedMs >= currentFrameDuration)
         {
             this.currentFrameElapsedMs = 0;
+            TotalFramesRan += 1;
+
             var cycleComplete = IsCycleComplete();
 
             if (cycleComplete)
@@ -165,7 +163,7 @@ internal class AsepriteAtlas : IAsepriteAtlas
         }
         else
         {
-            this.currentFrameElapsedMs += (int)frameTime.ElapsedTime.TotalMilliseconds;
+            this.currentFrameElapsedMs += (uint)frameTime.ElapsedTime.TotalMilliseconds;
         }
     }
 
@@ -176,7 +174,12 @@ internal class AsepriteAtlas : IAsepriteAtlas
     /// <exception cref="Exception">Thrown when the name of the animation does not exist.</exception>
     private void SetIndexRange(string? animationName)
     {
-        if (animationName is not null)
+        if (string.IsNullOrEmpty(animationName))
+        {
+            this.startingIndex = 0;
+            this.endingIndex = (uint)(Frames.Count - 1u);
+        }
+        else
         {
             if (Meta.Tags.Length <= 0 || Meta.Tags.All(x => x.Name != animationName))
             {
@@ -184,16 +187,9 @@ internal class AsepriteAtlas : IAsepriteAtlas
             }
 
             // Set the starting and ending index
-            this.startingIndex = Meta.Tags.Single(x => x.Name == animationName).From;
-            this.endingIndex = Meta.Tags.Single(x => x.Name == animationName).To;
+            this.startingIndex = (uint)Meta.Tags.Single(x => x.Name == animationName).From;
+            this.endingIndex = (uint)Meta.Tags.Single(x => x.Name == animationName).To;
         }
-        else
-        {
-            this.startingIndex = 0;
-            this.endingIndex = Frames.Count - 1;
-        }
-
-        CurrentFrameIndex = this.startingIndex;
     }
 
     /// <summary>
@@ -202,7 +198,7 @@ internal class AsepriteAtlas : IAsepriteAtlas
     /// <returns><c>True</c>, if the animation cycle is complete; otherwise <c>false</c>.</returns>
     private bool IsCycleComplete()
     {
-        if (AnimationName is null)
+        if (string.IsNullOrEmpty(AnimationName))
         {
             return Direction == AnimationDirection.Forward
                 ? CurrentFrameIndex >= Frames.Count - 1
@@ -219,15 +215,15 @@ internal class AsepriteAtlas : IAsepriteAtlas
     /// </summary>
     /// <param name="cycleComplete">A value indicating whether the animation cycle is complete.</param>
     /// <returns>The next frame index.</returns>
-    private int CalcNextIndex(bool cycleComplete)
+    private uint CalcNextIndex(bool cycleComplete)
     {
-        if (AnimationName is null)
+        if (string.IsNullOrEmpty(AnimationName))
         {
             return Direction switch
             {
                 AnimationDirection.Forward => cycleComplete ? 0 : CurrentFrameIndex + 1,
-                AnimationDirection.Backward => cycleComplete ? Frames.Count - 1 : CurrentFrameIndex - 1,
-                _ => throw new Exception($"Invalid direction value of '{Direction.ToString()}'.")
+                AnimationDirection.Backward => cycleComplete ? (uint)(Frames.Count - 1u) : CurrentFrameIndex - 1,
+                _ => throw new InvalidOperationException($"Invalid direction value of '{Direction.ToString()}'.")
             };
         }
 
@@ -235,7 +231,7 @@ internal class AsepriteAtlas : IAsepriteAtlas
         {
             AnimationDirection.Forward => cycleComplete ? this.startingIndex : CurrentFrameIndex + 1,
             AnimationDirection.Backward => cycleComplete ? this.endingIndex : CurrentFrameIndex - 1,
-            _ => throw new Exception($"Invalid direction value of '{Direction.ToString()}'.")
+            _ => throw new InvalidOperationException($"Invalid direction value of '{Direction.ToString()}'.")
         };
     }
 }

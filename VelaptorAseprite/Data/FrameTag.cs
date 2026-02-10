@@ -10,17 +10,17 @@ namespace VelaptorAseprite.Data;
 public sealed class FrameTag
 {
     /// <summary>
-    /// The name of the tag.
+    /// Gets the name of the tag.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; init; } = string.Empty;
 
     /// <summary>
-    /// The starting frame number for the tag.
+    /// Gets the starting frame number for the tag.
     /// </summary>
-    public int From { get; set; }
+    public int From { get; init; }
 
     /// <summary>
-    /// The ending frame number for the tag.
+    /// Gets the ending frame number for the tag.
     /// </summary>
-    public int To { get; set; }
+    public int To { get; init; }
 }

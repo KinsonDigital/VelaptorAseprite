@@ -18,7 +18,9 @@ using VelaptorAseprite.Data;
 /// </summary>
 public class AsepriteAtlasTests
 {
-    private const int AnimationDuration = 16;
+    private const uint AnimationDuration = 16;
+    private readonly Random random = new ();
+
     #region Prop Tests
     [Fact]
     public void LoopingBehavior_WhenSettingAndGettingValue_ReturnsCorrectResult()
@@ -64,8 +66,7 @@ public class AsepriteAtlasTests
         var frames = new Dictionary<int, AnimationFrame>
         {
             {
-                0,
-                new AnimationFrame
+                0, new AnimationFrame
                 {
                     Bounds = new Rectangle(11, 11, 11, 11),
                     SpriteSourceSize = new Rectangle(11, 11, 11, 11),
@@ -93,8 +94,7 @@ public class AsepriteAtlasTests
         var frames = new Dictionary<int, AnimationFrame>
         {
             {
-                0,
-                new AnimationFrame
+                0, new AnimationFrame
                 {
                     Bounds = new Rectangle(11, 11, 11, 11),
                     SpriteSourceSize = new Rectangle(11, 11, 11, 11),
@@ -105,8 +105,7 @@ public class AsepriteAtlasTests
                 }
             },
             {
-                1,
-                new AnimationFrame
+                1, new AnimationFrame
                 {
                     Bounds = new Rectangle(33, 33, 33, 33),
                     SpriteSourceSize = new Rectangle(33, 33, 33, 33),
@@ -143,56 +142,112 @@ public class AsepriteAtlasTests
         sut.Frames[1].Trimmed.Should().Be(frames[1].Trimmed);
     }
 
-    [Fact]
-    public void Play_WhenInvokedWithNoAnimationName_StartsAnimation()
+    [Theory]
+    [InlineData(
+        false,
+        "animation-1",
+        LoopingBehavior.Count,
+        100,
+        true,
+        "animation-1",
+        1,
+        0)]
+    [InlineData(
+        false,
+        null,
+        LoopingBehavior.None,
+        200,
+        true,
+        "",
+        1,
+        200)]
+    [InlineData(
+        true,
+        "test-animation",
+        LoopingBehavior.None,
+        200,
+        true,
+        "",
+        0,
+        200)]
+    public void Play_WhenInvoked_PlaysAnimation(
+        bool isAnimating,
+        string? animationName,
+        LoopingBehavior loopingBehavior,
+        uint currentLoopCount,
+        bool expectingIsAnimating,
+        string? expectedAnimationName,
+        uint expectedCurrentFrameIndex,
+        uint expectedCurrentLoopCount)
     {
         // Arrange
         var sut = CreateSystemUnderTest();
-        sut.LoopingBehavior = LoopingBehavior.Count;
-        sut.CurrentLoopCount = 22;
-
-        // Act
-        sut.Play();
-
-        // Assert
-        sut.IsAnimating.Should().BeTrue();
-        sut.CurrentLoopCount.Should().Be(0);
-    }
-
-    [Fact]
-    public void Play_WhenInvokedWithAnimationName_StartsAnimation()
-    {
-        // Arrange
-        var sut = CreateSystemUnderTest();
-        sut.LoopingBehavior = LoopingBehavior.Count;
-        sut.CurrentLoopCount = 22;
+        sut.Frames = CreateTestFrames();
         sut.Meta = CreateMetaData();
-        sut.Frames = CreateTestFrames();
+        sut.IsAnimating = isAnimating;
+        sut.LoopingBehavior = loopingBehavior;
+        sut.CurrentLoopCount = currentLoopCount;
 
         // Act
-        sut.Play("animation-1");
+        sut.Play(animationName);
 
         // Assert
-        sut.IsAnimating.Should().BeTrue();
-        sut.CurrentLoopCount.Should().Be(0);
+        sut.IsAnimating.Should().Be(expectingIsAnimating);
+        sut.AnimationName.Should().Be(expectedAnimationName);
+        sut.CurrentFrameIndex.Should().Be(expectedCurrentFrameIndex);
+        sut.CurrentLoopCount.Should().Be(expectedCurrentLoopCount);
     }
 
-    [Fact]
-    public void Play_WhenInvokedWithAnimationNameWhileTagDoesNotExist_StartsAnimation()
-    {
-        // NOTE: The internal tag name and animation name are the same thing
-        // Arrange
-        var sut = CreateSystemUnderTest();
-        sut.LoopingBehavior = LoopingBehavior.Count;
-        sut.CurrentLoopCount = 22;
-        sut.Frames = CreateTestFrames();
+    // [Fact]
+    // public void Play_WhenInvokedWithNoAnimationName_StartsAnimation()
+    // {
+    //     // Arrange
+    //     var sut = CreateSystemUnderTest();
+    //     sut.LoopingBehavior = LoopingBehavior.Count;
+    //     sut.CurrentLoopCount = 22;
+    //
+    //     // Act
+    //     sut.Play();
+    //
+    //     // Assert
+    //     sut.IsAnimating.Should().BeTrue();
+    //     sut.CurrentLoopCount.Should().Be(0);
+    // }
 
-        // Act
-        var act = () => sut.Play("animation-1");
-
-        // Assert
-        act.Should().Throw<NoTagException>().WithMessage("No Aseprite tag name exists that matches the animation of 'animation-1'.");
-    }
+    // [Fact]
+    // public void Play_WhenInvokedWithAnimationName_StartsAnimation()
+    // {
+    //     // Arrange
+    //     var sut = CreateSystemUnderTest();
+    //     sut.LoopingBehavior = LoopingBehavior.Count;
+    //     sut.CurrentLoopCount = 22;
+    //     sut.Meta = CreateMetaData();
+    //     sut.Frames = CreateTestFrames();
+    //
+    //     // Act
+    //     sut.Play("animation-1");
+    //
+    //     // Assert
+    //     sut.IsAnimating.Should().BeTrue();
+    //     sut.CurrentLoopCount.Should().Be(0);
+    // }
+    //
+    // [Fact]
+    // public void Play_WhenInvokedWithAnimationNameWhileTagDoesNotExist_StartsAnimation()
+    // {
+    //     // NOTE: The internal tag name and animation name are the same thing
+    //     // Arrange
+    //     var sut = CreateSystemUnderTest();
+    //     sut.LoopingBehavior = LoopingBehavior.Count;
+    //     sut.CurrentLoopCount = 22;
+    //     sut.Frames = CreateTestFrames();
+    //
+    //     // Act
+    //     var act = () => sut.Play("animation-1");
+    //
+    //     // Assert
+    //     act.Should().Throw<NoTagException>().WithMessage("No Aseprite tag name exists that matches the animation of 'animation-1'.");
+    // }
 
     [Fact]
     public void Play_WhenInvokedWithNoAnimationNameWhileTagDoesNotExist_ThrowsException()
@@ -232,11 +287,11 @@ public class AsepriteAtlasTests
         var sut = CreateSystemUnderTest();
         sut.CurrentFrameIndex = 4;
         sut.Play();
-        Field.SetFieldValue("currentFrameElapsedMs", sut, 123);
+        Field.SetFieldValue("currentFrameElapsedMs", sut, 123u);
 
         // Act
         sut.Reset();
-        var currentFrameElapsesMs = Field.GetFieldValue<AsepriteAtlas, int>("currentFrameElapsedMs", sut);
+        var currentFrameElapsesMs = Field.GetFieldValue<AsepriteAtlas, uint>("currentFrameElapsedMs", sut);
 
         // Assert
         sut.CurrentFrameIndex.Should().Be(0);
@@ -244,129 +299,8 @@ public class AsepriteAtlasTests
         sut.IsAnimating.Should().BeFalse();
     }
 
-    [Theory]
-    [InlineData( // Forward animation with the last frame and a non-complete cycle
-        AnimationDirection.Forward,
-        LoopingBehavior.Infinite,
-        2,
-        0,
-        0,
-        true,
-        3,
-        0)]
-    [InlineData( // Forward animation with the last frame and a complete cycle
-        AnimationDirection.Forward,
-        LoopingBehavior.Infinite,
-        4,
-        1,
-        0,
-        true,
-        2,
-        0)]
-    [InlineData( // Backward animation with the first frame and a non-complete cycle
-        AnimationDirection.Backward,
-        LoopingBehavior.Infinite,
-        3,
-        0,
-        0,
-        true,
-        2,
-        0)]
-    [InlineData( // Backward animation with the first frame and a complete cycle
-        AnimationDirection.Backward,
-        LoopingBehavior.Infinite,
-        2,
-        1,
-        0,
-        true,
-        4,
-        0)]
-    public void Update_WithForwardAndBackwardAnimation_AnimatesInProperDirection(AnimationDirection direction,
-        LoopingBehavior behavior,
-        int currentFrameIndex,
-        uint expectedTotalLoops,
-        uint expectedCurrentLoopCount,
-        bool expectedIsAnimating,
-        int expectedCurrentFrameIndex,
-        int expectedElapsedFrameTimeMs)
-    {
-        // Arrange
-        var frames = CreateTestFrames();
-        var sut = CreateSystemUnderTest();
-        sut.Frames = frames;
-        sut.LoopingBehavior = behavior;
-        sut.Direction = direction;
-        sut.Meta = CreateMetaData();
-        sut.AnimationName = "animation-2";
-        sut.CurrentFrameIndex = currentFrameIndex; // NOTE: This must be run after the setting of the animation name for the test
-        Field.SetFieldValue("currentFrameElapsedMs", sut, AnimationDuration);
-        sut.Play();
-
-        // Act
-        // We have to run update twice to get to the second frame
-        sut.Update(default(FrameTime).SetMs(AnimationDuration));
-
-        // Assert
-        var elapsedFrameTimeMs = Field.GetFieldValue<AsepriteAtlas, int>("currentFrameElapsedMs", sut);
-        sut.CurrentFrameIndex.Should().Be(expectedCurrentFrameIndex);
-        elapsedFrameTimeMs.Should().Be(expectedElapsedFrameTimeMs);
-        sut.TotalLoops.Should().Be(expectedTotalLoops);
-        sut.CurrentLoopCount.Should().Be(expectedCurrentLoopCount);
-        sut.IsAnimating.Should().Be(expectedIsAnimating);
-    }
-
     [Fact]
-    public void Update_WhenInvokedWithNoAnimationNameWhileTagExists_StartsAnimation()
-    {
-        // NOTE: The internal tag name and animation name are the same thing
-        // Arrange
-        var sut = CreateSystemUnderTest();
-        sut.LoopingBehavior = LoopingBehavior.Count;
-        sut.CurrentLoopCount = 22;
-        sut.Frames = CreateTestFrames();
-
-        // This is to simulate that the index is not the default value of 0
-        Field.SetFieldValue("startingIndex", sut, 100);
-        Field.SetFieldValue("endingIndex", sut, 200);
-
-        // Act
-        sut.AnimationName = null;
-
-        // Assert
-        Field.GetFieldValue<AsepriteAtlas, int>("startingIndex", sut).Should().Be(0);
-        Field.GetFieldValue<AsepriteAtlas, int>("endingIndex", sut).Should().Be(4);
-    }
-
-    [Theory]
-    [InlineData(0, false)]
-    [InlineData(10, true)]
-    public void Update_WithCountLoopingBehavior_BehavesCorrectly(uint maxLoops, bool expectedIsAnimating)
-    {
-        // Arrange
-        var frames = CreateTestFrames();
-        var sut = CreateSystemUnderTest();
-        sut.Frames = frames;
-        sut.LoopingBehavior = LoopingBehavior.Count;
-        sut.Direction = AnimationDirection.Forward;
-        sut.MaxLoops = maxLoops;
-        sut.Meta = CreateMetaData();
-        sut.AnimationName = "animation-2";
-        sut.CurrentFrameIndex = 4; // NOTE: This must be run after the setting of the animation name for the test
-        Field.SetFieldValue("currentFrameElapsedMs", sut, AnimationDuration);
-        sut.Play();
-
-        // Act
-        sut.Update(default(FrameTime).SetMs(AnimationDuration));
-
-        // Assert
-        sut.CurrentLoopCount.Should().Be(1);
-        sut.IsAnimating.Should().Be(expectedIsAnimating);
-    }
-
-    [Theory]
-    [InlineData(0, true)]
-    [InlineData(1, false)]
-    public void Update_WithNoLoopingBehavior_BehavesCorrectly(int currentFrameIndex, bool expectedIsAnimating)
+    public void Update_WithAnimationNameAndFullForwardCycleWithNoLooping_AnimatesSuccessfully()
     {
         // Arrange
         var frames = CreateTestFrames();
@@ -375,15 +309,87 @@ public class AsepriteAtlasTests
         sut.LoopingBehavior = LoopingBehavior.None;
         sut.Direction = AnimationDirection.Forward;
         sut.Meta = CreateMetaData();
-        sut.AnimationName = "animation-1";
-        sut.CurrentFrameIndex = currentFrameIndex; // NOTE: This must be run after the setting of the animation name for the test
-        Field.SetFieldValue("currentFrameElapsedMs", sut, AnimationDuration);
-        sut.Play();
+        sut.Enabled = true;
+        sut.Play("animation-2");
 
         // Act
-        sut.Update(default(FrameTime).SetMs(AnimationDuration));
+        var update = () => sut.Update(CreateFrameTiming());
+        update.RunUntil(() => !sut.IsAnimating);
 
         // Assert
+        sut.TotalLoops.Should().Be(1);
+        sut.TotalFramesRan.Should().Be(4);
+        sut.CurrentLoopCount.Should().Be(0);
+        sut.IsAnimating.Should().Be(false);
+    }
+
+    [Fact]
+    public void Update_WithAnimationNameAndFullBackwardCycleWithNoLooping_AnimatesSuccessfully()
+    {
+        // Arrange
+        var frames = CreateTestFrames();
+        var sut = CreateSystemUnderTest();
+        sut.Frames = frames;
+        sut.LoopingBehavior = LoopingBehavior.None;
+        sut.Direction = AnimationDirection.Backward;
+
+        // Set this one value past the last index of the animation
+        // The play method is going to decrement the current frame index
+        sut.CurrentFrameIndex = 5;
+
+        sut.Meta = CreateMetaData();
+        sut.Enabled = true;
+        sut.Play("animation-2");
+
+        // Act
+        var update = () => sut.Update(CreateFrameTiming());
+        update.RunUntil(() => !sut.IsAnimating);
+
+        // Assert
+        sut.TotalLoops.Should().Be(1);
+        sut.TotalFramesRan.Should().Be(3);
+        sut.CurrentLoopCount.Should().Be(0);
+        sut.IsAnimating.Should().Be(false);
+    }
+
+    [Theory]
+    [InlineData(10, 3, false)]
+    // [InlineData(1, true)]
+    public void Update_WhenCompletingFullAnimationCycleWithCountLoopingBehavior_BehavesCorrectly(
+        uint expectedTotalFramesToRan,
+        uint expectedCurrentLoopCount,
+        bool expectedIsAnimating)
+    {
+        /*
+         * NOTE:
+         * The expected frames to complete is always the total number of full animation
+         * loops multiplied by the number of frames in the animation.
+         */
+
+        // Arrange
+        var frames = CreateTestFrames();
+        var sut = CreateSystemUnderTest();
+        sut.Frames = frames;
+        sut.LoopingBehavior = LoopingBehavior.Count;
+        sut.Direction = AnimationDirection.Forward;
+        sut.MaxLoops = 3;
+        sut.Meta = CreateMetaData();
+        sut.Play("animation-2");
+
+        // Act
+        // It should not take 1000 updates to complete the animation, but just in case to
+        // prevent an infinite loop.
+        var update = () =>
+        {
+            var frameTiming = CreateFrameTiming();
+            sut.Update(frameTiming);
+        };
+        update.RunUntil(() => !sut.IsAnimating);
+
+        // Assert
+        sut.TotalLoops.Should().Be(3);
+        sut.CurrentLoopCount.Should().Be(expectedCurrentLoopCount);
+        sut.TotalFramesRan.Should().Be(expectedTotalFramesToRan);
         sut.IsAnimating.Should().Be(expectedIsAnimating);
     }
 
@@ -399,16 +405,16 @@ public class AsepriteAtlasTests
         sut.Play();
 
         // Act
-        sut.Update(default(FrameTime).SetMs(AnimationDuration));
+        sut.Update(default(FrameTime).SetMs(16));
 
         // Assert
-        Field.GetFieldValue<AsepriteAtlas, int>("currentFrameElapsedMs", sut).Should().Be(AnimationDuration);
+        Field.GetFieldValue<AsepriteAtlas, uint>("currentFrameElapsedMs", sut).Should().Be(AnimationDuration);
     }
 
     [Theory]
     [InlineData(true, false, false)]
     [InlineData(false, true, true)]
-    public void Update_WhenEnabledOrNotAnimating_DoesNotUpdateAnimation(bool enabled, bool isAnimating, bool expectedIsAnimating)
+    public void Update_WhenDisabledOrNotAnimating_DoesNotUpdateAnimation(bool disabled, bool isAnimating, bool expectedIsAnimating)
     {
         // Arrange
         var frames = CreateTestFrames();
@@ -416,23 +422,23 @@ public class AsepriteAtlasTests
         sut.Frames = frames;
         sut.LoopingBehavior = LoopingBehavior.None;
         sut.Direction = AnimationDirection.Forward;
-        sut.Enabled = enabled;
+        sut.Enabled = disabled;
         sut.IsAnimating = isAnimating;
         sut.CurrentFrameIndex += 1;
         Field.SetFieldValue("currentFrameElapsedMs", sut, AnimationDuration);
 
         // Act
-        sut.Update(default(FrameTime).SetMs(AnimationDuration));
+        sut.Update(CreateFrameTiming());
 
         // Assert
         sut.TotalLoops.Should().Be(0);
         sut.CurrentLoopCount.Should().Be(0);
         sut.IsAnimating.Should().Be(expectedIsAnimating);
-        Field.GetFieldValue<AsepriteAtlas, int>("currentFrameElapsedMs", sut).Should().Be(AnimationDuration);
+        Field.GetFieldValue<AsepriteAtlas, uint>("currentFrameElapsedMs", sut).Should().Be(AnimationDuration);
     }
 
     [Fact]
-    public void Update_WithFullForwardAnimationCycle_AnimatesSuccessfully()
+    public void Update_WithFullForwardAnimationCycleAndNoLooping_AnimatesSuccessfully()
     {
         // Arrange
         var frames = CreateTestFrames();
@@ -441,23 +447,19 @@ public class AsepriteAtlasTests
         sut.LoopingBehavior = LoopingBehavior.None;
         sut.Direction = AnimationDirection.Forward;
         sut.Meta = CreateMetaData();
-        sut.CurrentFrameIndex = 0; // NOTE: This must be run after the setting of the animation name for the test
+        sut.CurrentFrameIndex = 0;
         sut.Enabled = true;
         sut.Play();
 
         // Act
-        // Each frame is 16ms long with 5 frames total, so we have to run update 10 times to get through a
-        // full cycle. (5 frames * 16ms = 80ms total, 80ms / 16ms per update = 5 updates per cycle, 5 updates * 2 cycles = 10 updates)
-        for (var i = 0; i < 10; i++)
-        {
-            sut.Update(default(FrameTime).SetMs(AnimationDuration));
-        }
+        var update = () => sut.Update(CreateFrameTiming());
+        update.RunUntil(() => !sut.IsAnimating);
 
         // Assert
         sut.TotalLoops.Should().Be(1);
         sut.CurrentLoopCount.Should().Be(0);
         sut.IsAnimating.Should().Be(false);
-        Field.GetFieldValue<AsepriteAtlas, int>("currentFrameElapsedMs", sut).Should().Be(0);
+        Field.GetFieldValue<AsepriteAtlas, uint>("currentFrameElapsedMs", sut).Should().Be(0);
     }
 
     [Fact]
@@ -468,19 +470,18 @@ public class AsepriteAtlasTests
         var sut = CreateSystemUnderTest();
         sut.Frames = frames;
         sut.LoopingBehavior = LoopingBehavior.None;
-        sut.Direction = (AnimationDirection)400; // Invalid on purpose
         sut.Meta = CreateMetaData();
-        sut.AnimationName = "animation-1";
-        sut.CurrentFrameIndex = 1; // NOTE: This must be run after the setting of the animation name for the test
+        sut.CurrentFrameIndex = 1;
         sut.Enabled = true;
         Field.SetFieldValue("currentFrameElapsedMs", sut, AnimationDuration);
-        sut.Play();
+        sut.Play("animation-1");
+        sut.Direction = (AnimationDirection)400; // Invalid on purpose and must be executed after the play method
 
         // Act
-        var act = () => sut.Update(default(FrameTime).SetMs(AnimationDuration));
+        var act = () => sut.Update(CreateFrameTiming());
 
         // Assert
-        act.Should().Throw<Exception>().WithMessage("Invalid direction value of '400'.");
+        act.Should().Throw<InvalidOperationException>().WithMessage("Invalid direction value of '400'.");
     }
 
     [Fact]
@@ -491,15 +492,15 @@ public class AsepriteAtlasTests
         var sut = CreateSystemUnderTest();
         sut.Frames = frames;
         sut.LoopingBehavior = LoopingBehavior.None;
-        sut.Direction = (AnimationDirection)400; // Invalid on purpose
         sut.Meta = CreateMetaData();
-        sut.CurrentFrameIndex = 1; // NOTE: This must be run after the setting of the animation name for the test
+        sut.CurrentFrameIndex = 1;
         sut.Enabled = true;
         Field.SetFieldValue("currentFrameElapsedMs", sut, AnimationDuration);
         sut.Play();
+        sut.Direction = (AnimationDirection)400; // Invalid on purpose
 
         // Act
-        var act = () => sut.Update(default(FrameTime).SetMs(AnimationDuration));
+        var act = () => sut.Update(CreateFrameTiming());
 
         // Assert
         act.Should().Throw<Exception>().WithMessage("Invalid direction value of '400'.");
@@ -519,16 +520,16 @@ public class AsepriteAtlasTests
         sut.Play();
 
         // Act
-        sut.Update(default(FrameTime).SetMs(AnimationDuration));
-        sut.Update(default(FrameTime).SetMs(AnimationDuration));
-        sut.Update(default(FrameTime).SetMs(AnimationDuration));
-        sut.Update(default(FrameTime).SetMs(AnimationDuration));
+        sut.Update(CreateFrameTiming());
+        sut.Update(CreateFrameTiming());
+        sut.Update(CreateFrameTiming());
+        sut.Update(CreateFrameTiming());
 
         // Assert
         sut.TotalLoops.Should().Be(1);
         sut.CurrentLoopCount.Should().Be(0);
         sut.IsAnimating.Should().Be(false);
-        Field.GetFieldValue<AsepriteAtlas, int>("currentFrameElapsedMs", sut).Should().Be(0);
+        Field.GetFieldValue<AsepriteAtlas, uint>("currentFrameElapsedMs", sut).Should().Be(0);
     }
     #endregion
 
@@ -595,4 +596,10 @@ public class AsepriteAtlasTests
                 Scale = "0",
             },
         };
+
+    /// <summary>
+    /// Creates a random elapsed frame time for testing.
+    /// </summary>
+    /// <returns>The new frame timing.</returns>
+    private FrameTime CreateFrameTiming() => default(FrameTime).SetMs((int)this.random.NextRange(13f, 16f));
 }

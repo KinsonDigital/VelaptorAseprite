@@ -187,7 +187,7 @@ internal sealed class AsepriteAtlasLoader : IAsepriteAtlasLoader
             var atlasData = this.jsonService.Deserialize<AsepriteAtlas>(rawData)
                 ?? throw new LoadContentException($"There was an issue deserializing the JSON atlas data file at '{atlasDataFilePath}'.");
 
-            atlasData.AnimationName = animationName;
+            atlasData.AnimationName = animationName ?? string.Empty;
 
             var atlasImageData = this.imageService.Load(atlasImageFilePath);
             var atlasTexture = this.textureFactory.Create(atlasName, atlasImageFilePath, atlasImageData);
