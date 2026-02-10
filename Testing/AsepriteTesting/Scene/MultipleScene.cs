@@ -33,6 +33,7 @@ public class MultipleScene : SceneBase
     private IAsepriteAtlas? atlasData;
     private IFont? font;
     private KeyboardState prevKeyboardState;
+    private string currentAnimation = FireAnimation;
     private float velocityY = 100f;
     private bool movingDown = true;
 
@@ -52,7 +53,7 @@ public class MultipleScene : SceneBase
     public override void LoadContent()
     {
         this.atlasData = this.contentManager.LoadAsepriteAtlas(FireAnimation, SparkAnimation);
-        this.atlasData.LoopingBehavior = LoopingBehavior.None;
+        this.atlasData.LoopingBehavior = LoopingBehavior.Infinite;
         this.font = this.contentManager.LoadFont(FontName, 16);
 
         base.LoadContent();
@@ -207,7 +208,7 @@ public class MultipleScene : SceneBase
 
         if (currentKeyboardState.IsKeyUp(KeyCode.Space) && this.prevKeyboardState.IsKeyDown(KeyCode.Space))
         {
-            this.atlasData.LoopingBehavior = this.atlasData.AnimationName == FireAnimation
+            this.atlasData.LoopingBehavior = this.currentAnimation == FireAnimation
                 ? LoopingBehavior.Infinite
                 : LoopingBehavior.None;
 
@@ -217,25 +218,15 @@ public class MultipleScene : SceneBase
             }
             else
             {
-                this.atlasData.Play();
+                this.atlasData.Play(this.currentAnimation);
             }
         }
 
-        if (currentKeyboardState.IsKeyUp(KeyCode.Up) && this.prevKeyboardState.IsKeyDown(KeyCode.Up))
-        {
-        }
-
-        if (currentKeyboardState.IsKeyUp(KeyCode.Down) && this.prevKeyboardState.IsKeyDown(KeyCode.Down))
-        {
-        }
-
-        // Switch animations
         if (currentKeyboardState.IsKeyUp(KeyCode.Left) && this.prevKeyboardState.IsKeyDown(KeyCode.Left))
         {
             SwitchAnimation();
         }
 
-        // Switch animations
         if (currentKeyboardState.IsKeyUp(KeyCode.Right) && this.prevKeyboardState.IsKeyDown(KeyCode.Right))
         {
             SwitchAnimation();
@@ -244,18 +235,16 @@ public class MultipleScene : SceneBase
         this.prevKeyboardState = currentKeyboardState;
     }
 
+    /// <summary>
+    /// Switches the animation being played.
+    /// </summary>
     private void SwitchAnimation()
     {
-        switch (this.atlasData.AnimationName)
+        this.currentAnimation = this.atlasData.AnimationName switch
         {
-            case FireAnimation:
-                this.atlasData.AnimationName = SparkAnimation;
-                this.atlasData.LoopingBehavior = LoopingBehavior.Infinite;
-                break;
-            case SparkAnimation:
-                this.atlasData.AnimationName = FireAnimation;
-                this.atlasData.LoopingBehavior = LoopingBehavior.Infinite;
-                break;
-        }
+            FireAnimation => SparkAnimation,
+            SparkAnimation => FireAnimation,
+            _ => this.atlasData.AnimationName
+        };
     }
 }

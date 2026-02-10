@@ -25,15 +25,13 @@ public class Game : Window
     {
         this.keyboard = HardwareFactory.GetKeyboard();
 
-        var bouncingBallScene = new BouncingBallScene();
-        var compassScene = new CompassScene();
-        var multipleScene = new MultipleScene();
+        var bouncingBallScene = new BouncingBallScene { Name = "Bouncing Ball" };
+        var compassScene = new CompassScene { Name = "Compass" };
+        var multipleScene = new MultipleScene { Name = "Multiple Animations" };
 
         SceneManager.AddScene(bouncingBallScene, true);
         SceneManager.AddScene(compassScene);
         SceneManager.AddScene(multipleScene);
-
-        Title = "Aseprite Testing";
     }
 
     /// <summary>
@@ -47,11 +45,13 @@ public class Game : Window
         if (currentKeyboardState.IsKeyUp(KeyCode.PageDown) && this.prevKeyboardState.IsKeyDown(KeyCode.PageDown))
         {
             SceneManager.NextScene();
+            Title = SceneManager.CurrentScene.Name;
         }
 
         if (currentKeyboardState.IsKeyUp(KeyCode.PageUp) && this.prevKeyboardState.IsKeyDown(KeyCode.PageUp))
         {
             SceneManager.PreviousScene();
+            Title = SceneManager.CurrentScene.Name;
         }
 
         this.prevKeyboardState = currentKeyboardState;

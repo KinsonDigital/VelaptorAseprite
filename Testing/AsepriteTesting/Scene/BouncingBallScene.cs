@@ -4,7 +4,6 @@
 
 namespace AsepriteTesting.Scene;
 
-using System.Diagnostics;
 using Velaptor;
 using Velaptor.Scene;
 using System.Drawing;
@@ -246,9 +245,7 @@ public class BouncingBallScene : SceneBase
                 ? this.velocityY + -VelocityYChange
                 : this.velocityY + VelocityYChange;
 
-            var changePercent = 0f;
-
-            changePercent = (this.velocityY - oldVelocityY) / oldVelocityY;
+            var changePercent = (this.velocityY - oldVelocityY) / oldVelocityY;
 
             // If the change increased
             if (changePercent > 0)
@@ -272,9 +269,7 @@ public class BouncingBallScene : SceneBase
                 ? this.velocityY - -VelocityYChange
                 : this.velocityY - VelocityYChange;
 
-            var changePercent = 0f;
-
-            changePercent = (this.velocityY - oldVelocityY) / oldVelocityY;
+            var changePercent = (this.velocityY - oldVelocityY) / oldVelocityY;
 
             // If the change increased
             if (changePercent > 0)
