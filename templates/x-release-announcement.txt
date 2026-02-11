@@ -1,0 +1,6 @@
+${PROJECT_NAME} ${VERSION} is officially out! 🚀
+
+Fresh updates for your cross-platform 2D game dev workflow. Grab the latest NuGet package, view the release notes, or join our Discord community:
+
+👉 ${WEBSITE_URL}
+Happy coding! 🤘🏼#dotnet #gamedev #indiedev #oss
