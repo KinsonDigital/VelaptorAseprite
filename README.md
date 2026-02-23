@@ -25,7 +25,7 @@ Perfect for indie game developers who want to use **Aseprite's** excellent pixel
 
 - **Direct Aseprite Integration** - Load sprite sheets exported from Aseprite with their JSON data
 - **Full Animation Control** - Play, pause, stop, and reset animations with ease
-- **Flexible Looping** - Support for infinite loops, single playthrough, or custom loop counts
+- **Flexible Looping** - Support for infinite loops, single play through, or custom loop counts
 - **Directional Playback** - Play animations forward or backward
 - **Speed Control** - Adjust animation speed dynamically
 - **Simple API** - Extension methods on `IContentManager` for familiar content loading
@@ -72,10 +72,10 @@ public class MyScene : SceneBase
     public override void LoadContent()
     {
         contentManager = ContentManager.Create();
-        
+
         // Load the Aseprite atlas data
         atlasData = contentManager.LoadAsepriteAtlas("my-character");
-        
+
         // Start the animation
         atlasData.Play();
     }
@@ -88,17 +88,20 @@ public class MyScene : SceneBase
 
     public override void Render()
     {
-        if (atlasData is null) return;
-        
-        var frame = this.atlasData?.GetCurrentFrame();
+        if (atlasData is null)
+        {
+            return;
+        }
+
+        var frame = this.atlasData.GetCurrentFrame();
 
         var srcRect = frame.Bounds;
-        var destRect = new Rectangle(0, 0, (int)(this.atlasData?.Texture.Width ?? 0), (int)(this.atlasData?.Texture.Height ?? 0));
+        var destRect = new Rectangle(0, 0, (int)(this.atlasData.Texture.Width ?? 0), (int)(this.atlasData.Texture.Height ?? 0));
         destRect.X = WindowCenter.X;
         destRect.Y = WindowCenter.Y;
 
         this.textureRenderer.Render(
-            this.atlasData?.Texture,
+            this.atlasData.Texture,
             srcRect,
             destRect,
             RenderScale,
@@ -109,7 +112,10 @@ public class MyScene : SceneBase
 
     public override void UnloadContent()
     {
-        contentManager.UnloadAsepriteAtlas(atlasData);
+        if (atlasData is not null)
+        {
+            contentManager.UnloadAsepriteAtlas(atlasData);
+        }
     }
 }
 ```
@@ -173,7 +179,7 @@ public class Player
     {
         // Load the main player animation atlas
         this.playerAtlasData = contentManager.LoadAsepriteAtlas("main-player", "player-idle");
-        
+
         // Set the initial animation
         this.playerAtlasData.Play();
         this.playerAtlasData.LoopingBehavior = LoopingBehavior.Infinite;
@@ -182,21 +188,20 @@ public class Player
     public void Update(FrameTime frameTime)
     {
         var currentKeyState = this.keyboard.GetState();
-        
-        if (this.currentKeyState.IsKeyDown(KeyCode.Left) || this.currentKeyState.IsKeyDown(KeyCode.Right))
+
+        if (currentKeyState.IsKeyDown(KeyCode.Left) || currentKeyState.IsKeyDown(KeyCode.Right))
         {
             this.playerAtlasData.LoopingBehavior = LoopingBehavior.Infinite;
             this.playerAtlasData.AnimationName = "player-walk";
         }
-        
-        if (this.currentKeyState.IsKeyUp(KeyCode.Space) && this.prevKeyState.IsKeyDown(KeyCode.Space)) 
+
+        if (currentKeyState.IsKeyUp(KeyCode.Space) && this.prevKeyState.IsKeyDown(KeyCode.Space)) 
         {
             this.playerAtlasData.LoopingBehavior = LoopingBehavior.None;
             this.playerAtlasData.AnimationName = "player-jump";
         }
-        
+
         this.prevKeyState = currentKeyState;
-        
         this.playerAtlasData.Update(frameTime);
     }
     

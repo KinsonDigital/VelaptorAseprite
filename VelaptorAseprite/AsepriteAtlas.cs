@@ -153,12 +153,9 @@ internal class AsepriteAtlas : IAsepriteAtlas
                 CurrentLoopCount += 1;
                 IsAnimating = CurrentLoopCount < MaxLoops;
             }
-            else if (LoopingBehavior == LoopingBehavior.None)
+            else if (LoopingBehavior == LoopingBehavior.None && cycleComplete)
             {
-                if (cycleComplete)
-                {
-                    IsAnimating = false;
-                }
+                IsAnimating = false;
             }
         }
         else
@@ -223,7 +220,7 @@ internal class AsepriteAtlas : IAsepriteAtlas
             {
                 AnimationDirection.Forward => cycleComplete ? 0 : CurrentFrameIndex + 1,
                 AnimationDirection.Backward => cycleComplete ? (uint)(Frames.Count - 1u) : CurrentFrameIndex - 1,
-                _ => throw new InvalidOperationException($"Invalid direction value of '{Direction.ToString()}'.")
+                _ => throw new InvalidOperationException($"Invalid direction value of '{Direction}'.")
             };
         }
 
@@ -231,7 +228,7 @@ internal class AsepriteAtlas : IAsepriteAtlas
         {
             AnimationDirection.Forward => cycleComplete ? this.startingIndex : CurrentFrameIndex + 1,
             AnimationDirection.Backward => cycleComplete ? this.endingIndex : CurrentFrameIndex - 1,
-            _ => throw new InvalidOperationException($"Invalid direction value of '{Direction.ToString()}'.")
+            _ => throw new InvalidOperationException($"Invalid direction value of '{Direction}'.")
         };
     }
 }

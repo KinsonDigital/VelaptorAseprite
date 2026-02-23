@@ -201,7 +201,7 @@ public class BouncingBallScene : SceneBase
 
         this.fontRenderer.Render(this.font,
             instructionsText,
-            new Vector2(screenCenterX, screenCenterY - (screenOneEighthHeightY * 3)));
+            new Vector2(screenCenterX, screenCenterY - (screenOneEighthHeightY * 3f)));
 
         this.fontRenderer.Render(
             this.font,

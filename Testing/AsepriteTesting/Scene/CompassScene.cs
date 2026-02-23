@@ -193,7 +193,7 @@ public class CompassScene : SceneBase
 
         this.fontRenderer.Render(this.font,
             instructionsText,
-            new Vector2(screenCenterX, screenCenterY - (screenOneEighthHeightY * 3)));
+            new Vector2(screenCenterX, screenCenterY - (screenOneEighthHeightY * 3f)));
 
         // Render current frame index
         var currentFrameIndexText = $"Current Frame: {this.atlasData.CurrentFrameIndex}";

@@ -51,7 +51,7 @@ try {
 	printGray("Validating repository");
 	const gitConfigFileData = Deno.readTextFileSync(GIT_CONFIG_FILE_PATH);
 	const remoteOriginMatch =
-		gitConfigFileData.match(/\[remote "origin"\][\s\S]*?url = (.+)/m) ?? "";
+		gitConfigFileData.match(/\[remote "origin"\][\s\S]*?url = (.+)/m);
 
 	if (remoteOriginMatch === null) {
 		printIndianRed("The repository does not have a remote configured.");

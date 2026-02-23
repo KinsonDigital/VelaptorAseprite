@@ -103,15 +103,15 @@ public class MultipleScene : SceneBase
             throw new Exception("The atlas data has not been loaded yet.");
         }
 
-        var frame = this.atlasData!.GetCurrentFrame();
+        var frame = this.atlasData.GetCurrentFrame();
 
         var srcRect = frame.Bounds;
-        var destRect = new Rectangle(0, 0, (int)(this.atlasData?.Texture.Width ?? 0), (int)(this.atlasData?.Texture.Height ?? 0));
+        var destRect = new Rectangle(0, 0, (int)this.atlasData.Texture.Width, (int)this.atlasData.Texture.Height);
         destRect.X = WindowCenter.X;
         destRect.Y = WindowCenter.Y;
 
         this.textureRenderer.Render(
-            this.atlasData!.Texture,
+            this.atlasData.Texture,
             srcRect,
             destRect,
             RenderScale,
@@ -170,7 +170,7 @@ public class MultipleScene : SceneBase
 
         this.fontRenderer.Render(this.font,
             instructionsText,
-            new Vector2(screenCenterX, screenCenterY - (screenOneEighthHeightY * 3)));
+            new Vector2(screenCenterX, screenCenterY - (screenOneEighthHeightY * 3f)));
 
         this.fontRenderer.Render(
             this.font,

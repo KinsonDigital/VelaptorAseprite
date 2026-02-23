@@ -33,7 +33,7 @@ jobs:
           $branchName = "${{ github.ref_name }}".Trim();
 
           if ($branchName -ne "${{ vars.PREV_BRANCH }}") {
-            Write-Error "::error::The branch name must be 'release' for a preview release.";
+            Write-Host "::error::The branch name must be 'release' for a preview release.";
             exit "${{ inputs.dry-run }}" -eq "true" ? 0 : 1;
           }
 

@@ -198,59 +198,8 @@ public class AsepriteAtlasTests
         sut.CurrentLoopCount.Should().Be(expectedCurrentLoopCount);
     }
 
-    // [Fact]
-    // public void Play_WhenInvokedWithNoAnimationName_StartsAnimation()
-    // {
-    //     // Arrange
-    //     var sut = CreateSystemUnderTest();
-    //     sut.LoopingBehavior = LoopingBehavior.Count;
-    //     sut.CurrentLoopCount = 22;
-    //
-    //     // Act
-    //     sut.Play();
-    //
-    //     // Assert
-    //     sut.IsAnimating.Should().BeTrue();
-    //     sut.CurrentLoopCount.Should().Be(0);
-    // }
-
-    // [Fact]
-    // public void Play_WhenInvokedWithAnimationName_StartsAnimation()
-    // {
-    //     // Arrange
-    //     var sut = CreateSystemUnderTest();
-    //     sut.LoopingBehavior = LoopingBehavior.Count;
-    //     sut.CurrentLoopCount = 22;
-    //     sut.Meta = CreateMetaData();
-    //     sut.Frames = CreateTestFrames();
-    //
-    //     // Act
-    //     sut.Play("animation-1");
-    //
-    //     // Assert
-    //     sut.IsAnimating.Should().BeTrue();
-    //     sut.CurrentLoopCount.Should().Be(0);
-    // }
-    //
-    // [Fact]
-    // public void Play_WhenInvokedWithAnimationNameWhileTagDoesNotExist_StartsAnimation()
-    // {
-    //     // NOTE: The internal tag name and animation name are the same thing
-    //     // Arrange
-    //     var sut = CreateSystemUnderTest();
-    //     sut.LoopingBehavior = LoopingBehavior.Count;
-    //     sut.CurrentLoopCount = 22;
-    //     sut.Frames = CreateTestFrames();
-    //
-    //     // Act
-    //     var act = () => sut.Play("animation-1");
-    //
-    //     // Assert
-    //     act.Should().Throw<NoTagException>().WithMessage("No Aseprite tag name exists that matches the animation of 'animation-1'.");
-    // }
-
     [Fact]
-    public void Play_WhenInvokedWithNoAnimationNameWhileTagDoesNotExist_ThrowsException()
+    public void Play_WhenInvokedWithAnimationNameWhileTagDoesNotExist_ThrowsException()
     {
         // NOTE: The internal tag name and animation name are the same thing
         // Arrange

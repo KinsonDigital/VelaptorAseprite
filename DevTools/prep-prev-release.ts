@@ -11,7 +11,7 @@ import {
 	pushToRemote,
 	stageFiles,
 	uncommittedChangesExist,
-} from "jsr:@kinsondigital/sprocket@2.1.0/git";
+} from "jsr:@kinsondigital/sprocket@2.2.0/git";
 import {
 	LabelClient,
 	MilestoneClient,
@@ -19,7 +19,7 @@ import {
 	PullRequestClient,
 } from "jsr:@kinsondigital/kd-clients@1.0.0-preview.15";
 import { IssueOrPRRequestData } from "jsr:@kinsondigital/kd-clients@1.0.0-preview.15/core";
-import { printGray } from "jsr:@kinsondigital/sprocket@2.1.0/console";
+import { printGray } from "jsr:@kinsondigital/sprocket@2.2.0/console";
 import { ReleaseNotesGenerator } from "https://jsr.io/@kinsondigital/sprocket/2.2.0/src/release-notes-generator.ts";
 import { GeneratorSettings } from "https://jsr.io/@kinsondigital/sprocket/2.2.0/src/core/releases.ts";
 
