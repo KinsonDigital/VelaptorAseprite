@@ -1,6 +1,13 @@
-﻿namespace AsepriteTesting;
+﻿// <copyright file="Game.cs" company="KinsonDigital">
+// Copyright (c) KinsonDigital. All rights reserved.
+// </copyright>
 
+namespace AsepriteTesting;
+
+using Scene;
 using Velaptor;
+using Velaptor.Factories;
+using Velaptor.Input;
 using Velaptor.UI;
 
 /// <summary>
@@ -8,46 +15,47 @@ using Velaptor.UI;
 /// </summary>
 public class Game : Window
 {
-	/// <summary>
-	/// Load content here.
-	/// </summary>
-	protected override void OnLoad()
-	{
-		base.OnLoad();
-	}
+    private readonly IAppInput<KeyboardState> keyboard;
+    private KeyboardState prevKeyboardState;
 
-	/// <summary>
-	/// Unload content here.
-	/// </summary>
-	protected override void OnUnload()
-	{
-		base.OnUnload();
-	}
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Game"/> class.
+    /// </summary>
+    public Game()
+    {
+        this.keyboard = HardwareFactory.GetKeyboard();
 
-	/// <summary>
-	/// Update size dependent related game objects and more here.
-	/// </summary>
-	/// <param name="size">The new window size.</param>
-	protected override void OnResize(SizeU size)
-	{
-		base.OnResize(size);
-	}
+        var bouncingBallScene = new BouncingBallScene { Name = "Bouncing Ball" };
+        var compassScene = new CompassScene { Name = "Compass" };
+        var multipleScene = new MultipleScene { Name = "Multiple Animations" };
 
-	/// <summary>
-	/// Add game logic here.
-	/// </summary>
-	/// <param name="frameTime">The amount of time that passed for the current game loop frame.</param>
-	protected override void OnUpdate(FrameTime frameTime)
-	{
-		base.OnUpdate(frameTime);
-	}
+        SceneManager.AddScene(bouncingBallScene, true);
+        SceneManager.AddScene(compassScene);
+        SceneManager.AddScene(multipleScene);
+    }
 
-	/// <summary>
-	/// Render graphics here.
-	/// </summary>
-	/// <param name="frameTime">The amount of time that passed for the current game loop frame.</param>
-	protected override void OnDraw(FrameTime frameTime)
-	{
-		base.OnDraw(frameTime);
-	}
+    /// <summary>
+    /// Add game logic here.
+    /// </summary>
+    /// <param name="frameTime">The amount of time that passed for the current game loop frame.</param>
+    protected override void OnUpdate(FrameTime frameTime)
+    {
+        var currentKeyboardState = this.keyboard.GetState();
+
+        if (currentKeyboardState.IsKeyUp(KeyCode.PageDown) && this.prevKeyboardState.IsKeyDown(KeyCode.PageDown))
+        {
+            SceneManager.NextScene();
+            Title = SceneManager.CurrentScene.Name;
+        }
+
+        if (currentKeyboardState.IsKeyUp(KeyCode.PageUp) && this.prevKeyboardState.IsKeyDown(KeyCode.PageUp))
+        {
+            SceneManager.PreviousScene();
+            Title = SceneManager.CurrentScene.Name;
+        }
+
+        this.prevKeyboardState = currentKeyboardState;
+
+        base.OnUpdate(frameTime);
+    }
 }

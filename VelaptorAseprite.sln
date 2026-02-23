@@ -11,6 +11,26 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelaptorAsepriteTests", "Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsepriteTesting", "Testing\AsepriteTesting\AsepriteTesting.csproj", "{283CC31C-A8BE-4B05-BDBA-CD60E4168279}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{948445D9-4362-49AF-AA1A-140E29734505}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		deno.json = deno.json
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{33C49182-1293-4AA6-9899-28BD0413A7FC}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\unit-test-status-check.yml = .github\workflows\unit-test-status-check.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{0DCEFF55-008E-47C1-8CC9-9999219C3B34}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-status-check.yml = .github\workflows\build-status-check.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,5 +84,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F97C930D-C270-4DE6-B0ED-CAC32F13609B} = {78DDA25A-7C38-13C4-DE39-740FEE45D7B1}
 		{283CC31C-A8BE-4B05-BDBA-CD60E4168279} = {78DDA25A-7C38-13C4-DE39-740FEE45D7B1}
+		{33C49182-1293-4AA6-9899-28BD0413A7FC} = {948445D9-4362-49AF-AA1A-140E29734505}
+		{0DCEFF55-008E-47C1-8CC9-9999219C3B34} = {33C49182-1293-4AA6-9899-28BD0413A7FC}
 	EndGlobalSection
 EndGlobal

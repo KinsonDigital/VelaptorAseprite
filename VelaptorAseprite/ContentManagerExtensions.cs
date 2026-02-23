@@ -1,0 +1,51 @@
+﻿// <copyright file="ContentManagerExtensions.cs" company="KinsonDigital">
+// Copyright (c) KinsonDigital. All rights reserved.
+// </copyright>
+
+namespace VelaptorAseprite;
+
+using System.Diagnostics.CodeAnalysis;
+using Velaptor.Content;
+using Data;
+
+/// <summary>
+/// Provides extension methods for the <see cref="IContentManager"/>.
+/// </summary>
+[ExcludeFromCodeCoverage(Justification = $"Cannot test due to direct interaction with the '{nameof(SimpleInjector)}' library.")]
+public static class ContentManagerExtensions
+{
+#pragma warning disable IDE0060 // Remove unused parameter
+    /// <summary>
+    /// Loads an aseprite atlas data file.
+    /// </summary>
+    /// <param name="value">The content manager.</param>
+    /// <param name="pathOrName">The full qualified path or name of the atlas content to load.</param>
+    /// <param name="animationName">The name of the animation to play.</param>
+    /// <returns>The Aseprite atlas data.</returns>
+    /// <remarks>
+    /// If no <paramref name="animationName"/> is provided, then all frames will be played regardless of the animation.
+    /// </remarks>
+    [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Only used to apply extension method.")]
+    public static IAsepriteAtlas LoadAsepriteAtlas(this IContentManager value, string pathOrName, string? animationName = null)
+    {
+        var atlasLoader = IoC.Container.GetInstance<IAsepriteAtlasLoader>();
+
+        var atlasData = atlasLoader.Load(pathOrName, animationName);
+
+        return atlasData;
+    }
+
+    /// <summary>
+    /// Unloads the given <paramref name="atlas"/>.
+    /// </summary>
+    /// <param name="value">The content manager.</param>
+    /// <param name="atlas">The Aseprite atlas data to unload.</param>
+    [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "Only used to apply extension method.")]
+    public static void UnloadAsepriteAtlas(this IContentManager value, IAsepriteAtlas atlas)
+    {
+        var atlasLoader = IoC.Container.GetInstance<IAsepriteAtlasLoader>();
+
+        atlasLoader.Unload(atlas);
+    }
+#pragma warning restore IDE0060 // Remove unused parameter
+}

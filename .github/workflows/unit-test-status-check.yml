@@ -1,0 +1,30 @@
+name: ✅Unit Testing Status Check
+run-name: ✅Unit Testing Status Check (${{ github.base_ref }} branch)
+
+
+defaults:
+  run:
+    shell: pwsh
+
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main, preview]
+
+
+jobs:
+  run_tests:
+    name: Run Unit Tests Status Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set Up .NET SDK (${{ vars.NET_SDK_VERSION }})
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ vars.NET_SDK_VERSION }}
+
+      - name: Run Tests
+        run: |
+          dotnet test "${{ github.workspace }}/Testing/${{ vars.PROJECT_NAME }}Tests/${{ vars.PROJECT_NAME }}Tests.csproj" -c Debug;

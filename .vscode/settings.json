@@ -1,7 +1,34 @@
 {
+    "deno.enablePaths": [
+        "./DevTools/"
+    ],
     "cSpell.words": [
         "Aseprite",
+        "binlog",
+        "buildtransitive",
+        "CICD",
+        "contentfiles",
+        "Debug",
+        "Release",
+        "Releases",
+        "Result",
+        "fluentassertions",
+        "gamedev",
+        "indiedev",
         "Kinson",
+        "kinsondigital",
+        "nums",
+        "nunit",
+        "Reactable",
+        "Reactables",
+        "REPONAME",
+        "RGBA",
+        "simpleinjector",
+        "snupkg",
+        "stylecop",
+        "uild",
+        "Unsubscriber",
+        "Velap",
         "Velaptor",
         "Xunit"
     ],
@@ -12,6 +39,7 @@
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
         "**/bin": true,
-        "**/obj": true
+        "**/obj": true,
+        "**/.idea": true
     }
 }
