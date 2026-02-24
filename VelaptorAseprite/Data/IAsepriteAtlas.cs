@@ -101,6 +101,19 @@ public interface IAsepriteAtlas : IContent, IUpdatable
     AnimationDirection Direction { get; set; }
 
     /// <summary>
+    /// Gets or sets an action to invoke when an animation cycle is complete.
+    /// </summary>
+    /// <remarks>
+    /// The first argument is the name of the animation that completed.
+    /// </remarks>
+    OnCycleComplete? OnCycleComplete { get; set; }
+
+    /// <summary>
+    /// Gets or sets an action to invoke when the current frame has completed.
+    /// </summary>
+    OnFrameChange? OnFrameChange { get; set; }
+
+    /// <summary>
     /// Gets the current frame's animation data.
     /// </summary>
     /// <returns>The <see cref="AnimationFrame"/> at the current frame index.</returns>
@@ -113,16 +126,16 @@ public interface IAsepriteAtlas : IContent, IUpdatable
     void SetAnimationSpeed(int timeMs);
 
     /// <summary>
-    /// Starts or resumes the animation playback for a specific animation by the given <paramref name="animationName"/>.
+    /// Starts or resumes the animation playback for a specific animation by the given <paramref name="nameOfAnimation"/>.
     /// </summary>
-    /// <param name="animationName">The name of the animation to play.</param>
+    /// <param name="nameOfAnimation">The name of the animation to play.</param>
     /// <remarks>
     /// When <see cref="LoopingBehavior"/> is set to <see cref="VelaptorAseprite.LoopingBehavior.Count"/>,
     /// calling this method resets the <see cref="CurrentLoopCount"/> to zero.
     /// <br />
-    /// If no <paramref name="animationName"/> is provided, then all frames will be played regardless of the animation.
+    /// If no <paramref name="nameOfAnimation"/> is provided, then all frames will be played regardless of the animation.
     /// </remarks>
-    void Play(string? animationName = null);
+    void Play(string? nameOfAnimation = null);
 
     /// <summary>
     /// Stops the animation playback at the current frame.

@@ -161,15 +161,6 @@ public class AsepriteAtlasTests
         "",
         1,
         200)]
-    [InlineData(
-        true,
-        "test-animation",
-        LoopingBehavior.None,
-        200,
-        true,
-        "",
-        0,
-        200)]
     public void Play_WhenInvoked_PlaysAnimation(
         bool isAnimating,
         string? animationName,
@@ -249,6 +240,30 @@ public class AsepriteAtlasTests
     }
 
     [Fact]
+    public void Update_WithFullForwardCycleWithNoLooping_AnimatesSuccessfully()
+    {
+        // Arrange
+        var frames = CreateTestFrames();
+        var sut = CreateSystemUnderTest();
+        sut.Frames = frames;
+        sut.LoopingBehavior = LoopingBehavior.None;
+        sut.Direction = AnimationDirection.Forward;
+        sut.Meta = CreateMetaData();
+        sut.Enabled = true;
+        sut.Play("animation-2");
+
+        // Act
+        var update = () => sut.Update(CreateFrameTiming());
+        update.RunUntil(() => !sut.IsAnimating);
+
+        // Assert
+        sut.TotalLoops.Should().Be(1);
+        sut.TotalFramesRan.Should().Be(4);
+        sut.CurrentLoopCount.Should().Be(0);
+        sut.IsAnimating.Should().Be(false);
+    }
+
+    [Fact]
     public void Update_WithAnimationNameAndFullForwardCycleWithNoLooping_AnimatesSuccessfully()
     {
         // Arrange
@@ -301,28 +316,26 @@ public class AsepriteAtlasTests
         sut.IsAnimating.Should().Be(false);
     }
 
-    [Theory]
-    [InlineData(10, 3, false)]
-    // [InlineData(1, true)]
-    public void Update_WhenCompletingFullAnimationCycleWithCountLoopingBehavior_BehavesCorrectly(
-        uint expectedTotalFramesToRan,
-        uint expectedCurrentLoopCount,
-        bool expectedIsAnimating)
+    [Fact]
+    public void Update_WhenCompleteAnimationCycle_InvokesOnComplete()
     {
-        /*
-         * NOTE:
-         * The expected frames to complete is always the total number of full animation
-         * loops multiplied by the number of frames in the animation.
-         */
-
         // Arrange
         var frames = CreateTestFrames();
         var sut = CreateSystemUnderTest();
+
+        var completeCycleInvoked = false;
+        var completedAnimationName = string.Empty;
+
         sut.Frames = frames;
         sut.LoopingBehavior = LoopingBehavior.Count;
         sut.Direction = AnimationDirection.Forward;
         sut.MaxLoops = 3;
         sut.Meta = CreateMetaData();
+        sut.OnCycleComplete = (animationName) =>
+        {
+            completedAnimationName = animationName;
+            completeCycleInvoked = true;
+        };
         sut.Play("animation-2");
 
         // Act
@@ -336,10 +349,43 @@ public class AsepriteAtlasTests
         update.RunUntil(() => !sut.IsAnimating);
 
         // Assert
-        sut.TotalLoops.Should().Be(3);
-        sut.CurrentLoopCount.Should().Be(expectedCurrentLoopCount);
-        sut.TotalFramesRan.Should().Be(expectedTotalFramesToRan);
-        sut.IsAnimating.Should().Be(expectedIsAnimating);
+        completedAnimationName.Should().Be("animation-2");
+        completeCycleInvoked.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Update_WhenFrameCompletes_InvokesOnFrameChange()
+    {
+        // Arrange
+        var frames = CreateTestFrames();
+        var sut = CreateSystemUnderTest();
+
+        var frameChangeComplete = false;
+        var prevFrameIndex = -1;
+        var currentFrameIndex = -1;
+
+        sut.Frames = frames;
+        sut.LoopingBehavior = LoopingBehavior.Count;
+        sut.Direction = AnimationDirection.Forward;
+        sut.MaxLoops = 3;
+        sut.Meta = CreateMetaData();
+        sut.OnFrameChange = (prevFrame, currentFrame) =>
+        {
+            prevFrameIndex = prevFrame;
+            currentFrameIndex = currentFrame;
+            frameChangeComplete = true;
+        };
+        sut.Play("animation-2");
+        Field.SetFieldValue("currentFrameElapsedMs", sut, AnimationDuration);
+
+        // Act
+        var frameTiming = default(FrameTime).SetMs(16);
+        sut.Update(frameTiming);
+
+        // Assert
+        prevFrameIndex.Should().Be(1);
+        currentFrameIndex.Should().Be(2);
+        frameChangeComplete.Should().BeTrue();
     }
 
     [Fact]

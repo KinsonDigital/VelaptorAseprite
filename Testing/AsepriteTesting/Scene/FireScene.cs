@@ -1,4 +1,4 @@
-﻿// <copyright file="MultipleScene.cs" company="KinsonDigital">
+// <copyright file="FireScene.cs" company="KinsonDigital">
 // Copyright (c) KinsonDigital. All rights reserved.
 // </copyright>
 
@@ -20,12 +20,10 @@ using VelaptorAseprite.Data;
 /// <summary>
 /// Used to test out multiple animations in a single atlas.
 /// </summary>
-public class MultipleScene : SceneBase
+public class FireScene : SceneBase
 {
     private const string FontName = $"TimesNewRoman-{nameof(FontStyle.Regular)}.ttf";
-    private const float RenderScale = 3f;
-    private const string FireAnimation = "fire";
-    private const string SparkAnimation = "spark";
+    private const string FireAnimation = "blue-fire";
     private readonly IContentManager contentManager;
     private readonly ITextureRenderer textureRenderer;
     private readonly IFontRenderer fontRenderer;
@@ -33,14 +31,11 @@ public class MultipleScene : SceneBase
     private IAsepriteAtlas? atlasData;
     private IFont? font;
     private KeyboardState prevKeyboardState;
-    private string currentAnimation = FireAnimation;
-    private float velocityY = 100f;
-    private bool movingDown = true;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MultipleScene"/> class.
+    /// Initializes a new instance of the <see cref="FireScene"/> class.
     /// </summary>
-    public  MultipleScene()
+    public FireScene()
     {
         this.textureRenderer = RendererFactory.CreateTextureRenderer();
         this.fontRenderer = RendererFactory.CreateFontRenderer();
@@ -52,8 +47,13 @@ public class MultipleScene : SceneBase
     /// <inheritdoc cref="SceneBase" />
     public override void LoadContent()
     {
-        this.atlasData = this.contentManager.LoadAsepriteAtlas(FireAnimation, SparkAnimation);
+        this.atlasData = this.contentManager.LoadAsepriteAtlas(FireAnimation, "grow");
         this.atlasData.LoopingBehavior = LoopingBehavior.Infinite;
+
+        this.atlasData.OnCycleComplete = _ =>
+        {
+            this.atlasData.Play("burn");
+        };
 
         this.font = this.contentManager.LoadFont(FontName, 16);
 
@@ -81,17 +81,7 @@ public class MultipleScene : SceneBase
     {
         ProcessInput();
 
-        var wasAnimating = this.atlasData.IsAnimating;
-
         this.atlasData.Update(frameTime);
-
-        // Check if animation just finished (was enabled, now disabled)
-        if (wasAnimating && !this.atlasData.IsAnimating)
-        {
-            // Animation just finished, start moving up
-            this.velocityY = -Math.Abs(this.velocityY);
-            this.movingDown = false;
-        }
 
         base.Update(frameTime);
     }
@@ -115,7 +105,7 @@ public class MultipleScene : SceneBase
             this.atlasData.Texture,
             srcRect,
             destRect,
-            RenderScale,
+            1f,
             0f,
             Color.White,
             RenderEffects.None);
@@ -138,27 +128,19 @@ public class MultipleScene : SceneBase
         var animationNameSize = this.font.Measure(animationName);
         var animationNamePosY = screenOneEighthHeightY * 6;
 
-        var velocityText = $"Velocity: {this.velocityY}";
-        var velocityTextSize = this.font.Measure(velocityText);
-        var velocityTextPosY = animationNamePosY + (int)animationNameSize.Height + verticalSpacing;
-
         var animationEnabledText = $"Animation Enabled: {this.atlasData.IsAnimating}";
         var animationEnabledTextSize = this.font.Measure(animationEnabledText);
-        var animationTextPosY = velocityTextPosY + (int)velocityTextSize.Height + verticalSpacing;
-
-        var movingDownText = $"Moving Down: {this.movingDown}";
-        var movingDownTextSize = this.font.Measure(movingDownText);
-        var movingDownTextPosY = animationTextPosY + (int)animationEnabledTextSize.Height + verticalSpacing;
+        var animationTextPosY = animationNamePosY + (int)animationNameSize.Height + verticalSpacing;
 
         var currentFrameText = $"Current Frame: {this.atlasData.CurrentFrameIndex}";
         var currentFrameTextSize = this.font.Measure(currentFrameText);
-        var currentFrameTextPosY = movingDownTextPosY + (int)movingDownTextSize.Height + verticalSpacing;
+        var currentFrameTextPosY = animationTextPosY + (int)animationEnabledTextSize.Height + verticalSpacing;
 
         var instructionWidths = new[]
         {
             (int)animationNameSize.Width,
-            (int)velocityTextSize.Width, (int)animationEnabledTextSize.Width,
-            (int)movingDownTextSize.Width, (int)currentFrameTextSize.Width,
+            (int)animationEnabledTextSize.Width,
+            (int)currentFrameTextSize.Width,
         };
 
         var largestWidth = instructionWidths.Max();
@@ -180,19 +162,9 @@ public class MultipleScene : SceneBase
             animationNamePosY);
         this.fontRenderer.Render(
             this.font,
-            velocityText,
-            winWidth - ((int)velocityTextSize.Width / 2) - largestWidth,
-            velocityTextPosY);
-        this.fontRenderer.Render(
-            this.font,
             animationEnabledText,
             winWidth - ((int)animationEnabledTextSize.Width / 2) - largestWidth,
             animationTextPosY);
-        this.fontRenderer.Render(
-            this.font,
-            movingDownText,
-            winWidth - ((int)movingDownTextSize.Width / 2) - largestWidth,
-            movingDownTextPosY);
         this.fontRenderer.Render(
             this.font,
             currentFrameText,
@@ -209,43 +181,16 @@ public class MultipleScene : SceneBase
 
         if (currentKeyboardState.IsKeyUp(KeyCode.Space) && this.prevKeyboardState.IsKeyDown(KeyCode.Space))
         {
-            this.atlasData.LoopingBehavior = this.currentAnimation == FireAnimation
-                ? LoopingBehavior.Infinite
-                : LoopingBehavior.None;
-
             if (this.atlasData.IsAnimating)
             {
                 this.atlasData.Stop();
             }
             else
             {
-                this.atlasData.Play(this.currentAnimation);
+                this.atlasData.Play(this.atlasData.AnimationName);
             }
         }
 
-        if (currentKeyboardState.IsKeyUp(KeyCode.Left) && this.prevKeyboardState.IsKeyDown(KeyCode.Left))
-        {
-            SwitchAnimation();
-        }
-
-        if (currentKeyboardState.IsKeyUp(KeyCode.Right) && this.prevKeyboardState.IsKeyDown(KeyCode.Right))
-        {
-            SwitchAnimation();
-        }
-
         this.prevKeyboardState = currentKeyboardState;
-    }
-
-    /// <summary>
-    /// Switches the animation being played.
-    /// </summary>
-    private void SwitchAnimation()
-    {
-        this.currentAnimation = this.atlasData.AnimationName switch
-        {
-            FireAnimation => SparkAnimation,
-            SparkAnimation => FireAnimation,
-            _ => this.atlasData.AnimationName
-        };
     }
 }

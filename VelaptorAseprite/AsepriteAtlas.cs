@@ -16,6 +16,8 @@ internal class AsepriteAtlas : IAsepriteAtlas
     private LoopingBehavior loopingBehavior = LoopingBehavior.Infinite;
     private uint startingIndex;
     private uint endingIndex;
+    private uint prevFrameIndex;
+    private string animationName = string.Empty;
 
     /// <inheritdoc/>
     public ITexture Texture { get; internal set; } = null!;
@@ -66,7 +68,11 @@ internal class AsepriteAtlas : IAsepriteAtlas
     }
 
     /// <inheritdoc/>
-    public string AnimationName { get; internal set; } = string.Empty;
+    public string AnimationName
+    {
+        get => this.animationName;
+        internal set => this.animationName = string.IsNullOrEmpty(value) ? string.Empty : value;
+    }
 
     /// <inheritdoc/>
     public uint CurrentLoopCount { get; internal set; }
@@ -79,6 +85,12 @@ internal class AsepriteAtlas : IAsepriteAtlas
 
     /// <inheritdoc/>
     public AnimationDirection Direction { get; set; }
+
+    /// <inheritdoc/>
+    public OnCycleComplete? OnCycleComplete { get; set; }
+
+    /// <inheritdoc/>
+    public OnFrameChange? OnFrameChange { get; set; }
 
     /// <inheritdoc/>
     public AnimationFrame GetCurrentFrame() => Frames[(int)CurrentFrameIndex];
@@ -94,16 +106,11 @@ internal class AsepriteAtlas : IAsepriteAtlas
     }
 
     /// <inheritdoc/>
-    public void Play(string? animationName = null)
+    public void Play(string? nameOfAnimation = null)
     {
-        if (IsAnimating)
-        {
-            return;
-        }
-
         IsAnimating = true;
 
-        AnimationName = string.IsNullOrEmpty(animationName) ? string.Empty : animationName;
+        AnimationName = string.IsNullOrEmpty(nameOfAnimation) ? string.Empty : nameOfAnimation;
         SetIndexRange(AnimationName);
         CurrentFrameIndex = CalcNextIndex(IsCycleComplete());
 
@@ -144,9 +151,15 @@ internal class AsepriteAtlas : IAsepriteAtlas
             if (cycleComplete)
             {
                 TotalLoops += 1;
+
+                // If the on cycle complete event handler is set, invoke it
+                OnCycleComplete?.Invoke(AnimationName);
             }
 
+            this.prevFrameIndex = CurrentFrameIndex;
             CurrentFrameIndex = CalcNextIndex(cycleComplete);
+
+            OnFrameChange?.Invoke((int)this.prevFrameIndex, (int)CurrentFrameIndex);
 
             if (cycleComplete && LoopingBehavior == LoopingBehavior.Count)
             {
@@ -167,25 +180,25 @@ internal class AsepriteAtlas : IAsepriteAtlas
     /// <summary>
     /// Sets the starting and ending index based on the animation name.
     /// </summary>
-    /// <param name="animationName">The name of the animation to play.</param>
+    /// <param name="nameOfAnimation">The name of the animation to play.</param>
     /// <exception cref="Exception">Thrown when the name of the animation does not exist.</exception>
-    private void SetIndexRange(string? animationName)
+    private void SetIndexRange(string? nameOfAnimation)
     {
-        if (string.IsNullOrEmpty(animationName))
+        if (string.IsNullOrEmpty(nameOfAnimation))
         {
             this.startingIndex = 0;
             this.endingIndex = (uint)(Frames.Count - 1u);
         }
         else
         {
-            if (Meta.Tags.Length <= 0 || Meta.Tags.All(x => x.Name != animationName))
+            if (Meta.Tags.Length <= 0 || Meta.Tags.All(x => x.Name != nameOfAnimation))
             {
-                throw new NoTagException($"No Aseprite tag name exists that matches the animation of '{animationName}'.");
+                throw new NoTagException($"No Aseprite tag name exists that matches the animation of '{nameOfAnimation}'.");
             }
 
             // Set the starting and ending index
-            this.startingIndex = (uint)Meta.Tags.Single(x => x.Name == animationName).From;
-            this.endingIndex = (uint)Meta.Tags.Single(x => x.Name == animationName).To;
+            this.startingIndex = (uint)Meta.Tags.Single(x => x.Name == nameOfAnimation).From;
+            this.endingIndex = (uint)Meta.Tags.Single(x => x.Name == nameOfAnimation).To;
         }
     }
 

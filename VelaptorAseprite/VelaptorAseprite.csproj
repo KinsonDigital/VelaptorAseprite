@@ -17,7 +17,45 @@
       Example: v1.2.3.preview.1 is not allowed
     -->
     <AssemblyVersion>1.0.0</AssemblyVersion>
+
+    <ApplicationIcon>velaptor-aseprite-logo.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PackageId>KinsonDigital.VelaptorAseprite</PackageId>
+    <Authors>Calvin Wilkinson</Authors>
+    <Company>Kinson Digital</Company>
+    <Product>VelaptorAseprite</Product>
+    <Description>2D game or application development framework that provides 2D rendering, audio, keyboard and mouse input, etc.</Description>
+    <Copyright>Copyright ©2025 Kinson Digital</Copyright>
+    <PackageTags>velaptor raptor 2D game games framework</PackageTags>
+    <Configurations>Debug;Release</Configurations>
+    <PackageProjectUrl>https://github.com/KinsonDigital/VelaptorAseprite</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/KinsonDigital/VelaptorAseprite</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>velaptor-aseprite-logo.png</PackageIcon>
+    <Platforms>x64</Platforms>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="AsepriteTesting" />
+    <InternalsVisibleTo Include="VelaptorAsepriteTests" />
+
+    <!-- Allows the DynamicProxyGenAssembly2 assembly used by NSubstitute to access internal members for mocking -->
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="velaptor-aseprite-logo.ico" Pack="true" PackagePath="\" />
+    <None Include="..\Images\velaptor-aseprite-logo.png" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE.md" Pack="true" PackagePath="\" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="KinsonDigital.Velaptor" Version="1.0.0-preview.44" />
@@ -30,19 +68,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.IO.Abstractions" Version="22.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="AsepriteTesting" />
-    <InternalsVisibleTo Include="VelaptorAsepriteTests" />
-
-    <!-- Allows the DynamicProxyGenAssembly2 assembly used by NSubstitute to access internal members for mocking -->
-    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="stylecop.json" />
-    <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
 
 </Project>

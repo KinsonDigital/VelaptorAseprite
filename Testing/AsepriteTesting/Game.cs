@@ -25,13 +25,15 @@ public class Game : Window
     {
         this.keyboard = HardwareFactory.GetKeyboard();
 
-        var bouncingBallScene = new BouncingBallScene { Name = "Bouncing Ball" };
-        var compassScene = new CompassScene { Name = "Compass" };
-        var multipleScene = new MultipleScene { Name = "Multiple Animations" };
+        // var bouncingBallScene = new BouncingBallScene { Name = "Bouncing Ball" };
+        // var compassScene = new CompassScene { Name = "Compass" };
+        // var multipleScene = new MultipleScene { Name = "Multiple Animations" };
+        var fireScene = new FireScene { Name = "Fire" };
 
-        SceneManager.AddScene(bouncingBallScene, true);
-        SceneManager.AddScene(compassScene);
-        SceneManager.AddScene(multipleScene);
+        // SceneManager.AddScene(bouncingBallScene, true);
+        // SceneManager.AddScene(compassScene);
+        // SceneManager.AddScene(multipleScene);
+        SceneManager.AddScene(fireScene);
     }
 
     /// <summary>

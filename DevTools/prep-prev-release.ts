@@ -51,7 +51,7 @@ if (fileVersionMatch === null) {
 
 const ownerName = "KinsonDigital";
 const repoName = "VelaptorAseprite";
-const prevLabel = "🚀preview-release";
+const prevLabel = "preview-release";
 const baseBranch = "preview";
 const releaseType = "Preview";
 
