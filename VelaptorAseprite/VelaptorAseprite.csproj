@@ -36,6 +36,7 @@
     <Platforms>x64</Platforms>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <NoWarn>CS7035</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
