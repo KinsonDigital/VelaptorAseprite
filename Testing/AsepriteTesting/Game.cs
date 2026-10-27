@@ -23,6 +23,7 @@ public class Game : Window
     /// </summary>
     public Game()
     {
+        TypeOfBorder = WindowBorder.Fixed;
         this.keyboard = HardwareFactory.GetKeyboard();
 
         var bouncingBallScene = new BouncingBallScene { Name = "Bouncing Ball" };
