@@ -26,7 +26,7 @@ public class CompassScene : SceneBase
     private const float RenderScale = 3;
     private readonly IContentManager contentManager;
     private readonly ITextureRenderer textureRenderer;
-    private readonly IFontRenderer fontRenderer;
+    private readonly ITextRenderer textRenderer;
     private readonly IAppInput<KeyboardState> keyboard;
     private IAsepriteAtlas? atlasData;
     private IFont? font;
@@ -40,7 +40,7 @@ public class CompassScene : SceneBase
     {
         this.contentManager = ContentManager.Create();
         this.textureRenderer = RendererFactory.CreateTextureRenderer();
-        this.fontRenderer = RendererFactory.CreateFontRenderer();
+        this.textRenderer = RendererFactory.CreateTextRenderer();
 
         this.keyboard = HardwareFactory.GetKeyboard();
     }
@@ -191,7 +191,7 @@ public class CompassScene : SceneBase
         instructionsText += "Press 'enter' to reset the animation\n";
         instructionsText += "Press 'l' to change the looping behavior";
 
-        this.fontRenderer.Render(this.font,
+        this.textRenderer.Render(this.font,
             instructionsText,
             new Vector2(screenCenterX, screenCenterY - (screenOneEighthHeightY * 3f)));
 
@@ -199,7 +199,7 @@ public class CompassScene : SceneBase
         var currentFrameIndexText = $"Current Frame: {this.atlasData.CurrentFrameIndex}";
         var currentFrameIndexTextSize = this.font.Measure(currentFrameIndexText);
         var nextTextPosY = (screenOneEighthHeightY * 5f) + offsetY;
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             currentFrameIndexText,
             new Vector2(screenCenterX, nextTextPosY));
@@ -208,7 +208,7 @@ public class CompassScene : SceneBase
         var animationSpeedText = $"Animation Speed: {this.animationSpeedMs}ms";
         var animationSpeedTextSize = this.font.Measure(animationSpeedText);
         nextTextPosY += currentFrameIndexTextSize.Height + offsetY;
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             animationSpeedText,
             new Vector2(screenCenterX, nextTextPosY));
@@ -216,7 +216,7 @@ public class CompassScene : SceneBase
         var loopingBehaviorText = $"Looping Behavior: {this.atlasData.LoopingBehavior}";
         var loopingBehaviorTextSize = this.font.Measure(loopingBehaviorText);
         nextTextPosY += animationSpeedTextSize.Height + offsetY;
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             loopingBehaviorText,
             new Vector2(screenCenterX, nextTextPosY));
@@ -224,14 +224,14 @@ public class CompassScene : SceneBase
         var currentLoopCountText = $"Current Loop Count: {this.atlasData.CurrentLoopCount}";
         var currentLoopCountTextSize = this.font.Measure(currentLoopCountText);
         nextTextPosY += loopingBehaviorTextSize.Height + offsetY;
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             currentLoopCountText,
             new Vector2(screenCenterX, nextTextPosY));
 
         var totalLoopsText = $"Total Loops: {this.atlasData.TotalLoops}";
         nextTextPosY += currentLoopCountTextSize.Height + offsetY;
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             totalLoopsText,
             new Vector2(screenCenterX, nextTextPosY));

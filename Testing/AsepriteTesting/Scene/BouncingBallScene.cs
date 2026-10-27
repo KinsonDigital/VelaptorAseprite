@@ -29,8 +29,8 @@ public class BouncingBallScene : SceneBase
     private const float VelocityYChange = 5;
     private readonly IContentManager contentManager;
     private readonly ITextureRenderer textureRenderer;
-    private readonly IFontRenderer fontRenderer;
-    private readonly ILineRenderer lineRenderer;
+    private readonly ITextRenderer textRenderer;
+    private readonly IShapeRenderer shapeRenderer;
     private readonly IAppInput<KeyboardState> keyboard;
     private IAsepriteAtlas? atlasData;
     private IFont? font;
@@ -47,8 +47,8 @@ public class BouncingBallScene : SceneBase
     public BouncingBallScene()
     {
         this.textureRenderer = RendererFactory.CreateTextureRenderer();
-        this.lineRenderer = RendererFactory.CreateLineRenderer();
-        this.fontRenderer = RendererFactory.CreateFontRenderer();
+        this.shapeRenderer = RendererFactory.CreateShapeRenderer();
+        this.textRenderer = RendererFactory.CreateTextRenderer();
         this.keyboard = HardwareFactory.GetKeyboard();
 
         this.contentManager = ContentManager.Create();
@@ -165,7 +165,7 @@ public class BouncingBallScene : SceneBase
         const int verticalSpacing = 15;
         var winWidth = (int)WindowSize.Width;
         var line = new Line(new Vector2(0, MaxBounceHeight), new Vector2(winWidth, MaxBounceHeight), Color.CornflowerBlue);
-        this.lineRenderer.Render(line);
+        this.shapeRenderer.Render(line);
 
         var screenCenterX = (int)(WindowSize.Width / 2);
         var screenCenterY = (int)(WindowSize.Height / 2);
@@ -199,26 +199,26 @@ public class BouncingBallScene : SceneBase
         instructionsText += "Press 'up' to speed up movement velocity\n";
         instructionsText += "Press 'down' to slow down movement velocity\n";
 
-        this.fontRenderer.Render(this.font,
+        this.textRenderer.Render(this.font,
             instructionsText,
             new Vector2(screenCenterX, screenCenterY - (screenOneEighthHeightY * 3f)));
 
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             velocityText,
             winWidth - ((int)velocityTextSize.Width / 2) - largestWidth,
             velocityTextPosY);
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             animationEnabledText,
             winWidth - ((int)animationEnabledTextSize.Width / 2) - largestWidth,
             animationTextPosY);
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             movingDownText,
             winWidth - ((int)movingDownTextSize.Width / 2) - largestWidth,
             movingDownTextPosY);
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             currentFrameText,
             winWidth - ((int)currentFrameTextSize.Width / 2) - largestWidth,

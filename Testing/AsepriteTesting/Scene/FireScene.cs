@@ -26,7 +26,7 @@ public class FireScene : SceneBase
     private const string FireAnimation = "blue-fire";
     private readonly IContentManager contentManager;
     private readonly ITextureRenderer textureRenderer;
-    private readonly IFontRenderer fontRenderer;
+    private readonly ITextRenderer textRenderer;
     private readonly IAppInput<KeyboardState> keyboard;
     private IAsepriteAtlas? atlasData;
     private IFont? font;
@@ -38,7 +38,7 @@ public class FireScene : SceneBase
     public FireScene()
     {
         this.textureRenderer = RendererFactory.CreateTextureRenderer();
-        this.fontRenderer = RendererFactory.CreateFontRenderer();
+        this.textRenderer = RendererFactory.CreateTextRenderer();
         this.keyboard = HardwareFactory.GetKeyboard();
 
         this.contentManager = ContentManager.Create();
@@ -151,21 +151,21 @@ public class FireScene : SceneBase
         instructionsText += "Press 'down' to slow down movement velocity\n";
         instructionsText += "Press 'left/right' to change animations";
 
-        this.fontRenderer.Render(this.font,
+        this.textRenderer.Render(this.font,
             instructionsText,
             new Vector2(screenCenterX, screenCenterY - (screenOneEighthHeightY * 3f)));
 
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             animationName,
             winWidth - ((int)animationNameSize.Width / 2) - largestWidth,
             animationNamePosY);
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             animationEnabledText,
             winWidth - ((int)animationEnabledTextSize.Width / 2) - largestWidth,
             animationTextPosY);
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             currentFrameText,
             winWidth - ((int)currentFrameTextSize.Width / 2) - largestWidth,
