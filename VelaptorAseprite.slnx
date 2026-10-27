@@ -1,0 +1,26 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/SolutionItems/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="deno.json" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/SolutionItems/.github/">
+    <File Path=".github/workflows/unit-test-status-check.yml" />
+  </Folder>
+  <Folder Name="/SolutionItems/.github/workflows/">
+    <File Path=".github/workflows/build-status-check.yml" />
+    <File Path=".github/workflows/release.yml" />
+  </Folder>
+  <Folder Name="/Testing/">
+    <Project Path="Testing/AsepriteTesting/AsepriteTesting.csproj" />
+    <Project Path="Testing/VelaptorAsepriteTests/VelaptorAsepriteTests.csproj" />
+  </Folder>
+  <Project Path="VelaptorAseprite/VelaptorAseprite.csproj" />
+</Solution>

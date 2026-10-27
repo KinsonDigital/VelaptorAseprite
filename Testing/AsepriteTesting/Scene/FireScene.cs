@@ -26,11 +26,12 @@ public class FireScene : SceneBase
     private const string FireAnimation = "blue-fire";
     private readonly IContentManager contentManager;
     private readonly ITextureRenderer textureRenderer;
-    private readonly IFontRenderer fontRenderer;
+    private readonly ITextRenderer textRenderer;
     private readonly IAppInput<KeyboardState> keyboard;
     private IAsepriteAtlas? atlasData;
     private IFont? font;
     private KeyboardState prevKeyboardState;
+    private int animationSpeedMs = 100;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FireScene"/> class.
@@ -38,7 +39,7 @@ public class FireScene : SceneBase
     public FireScene()
     {
         this.textureRenderer = RendererFactory.CreateTextureRenderer();
-        this.fontRenderer = RendererFactory.CreateFontRenderer();
+        this.textRenderer = RendererFactory.CreateTextRenderer();
         this.keyboard = HardwareFactory.GetKeyboard();
 
         this.contentManager = ContentManager.Create();
@@ -97,9 +98,10 @@ public class FireScene : SceneBase
         var frame = this.atlasData.GetCurrentFrame();
 
         var srcRect = frame.Bounds;
-        var destRect = new Rectangle(0, 0, (int)this.atlasData.Texture.Width, (int)this.atlasData.Texture.Height);
-        destRect.X = WindowCenter.X;
-        destRect.Y = WindowCenter.Y;
+        var destRect = new Rectangle(0, 0, (int)this.atlasData.Texture.Width, (int)this.atlasData.Texture.Height)
+        {
+            X = WindowCenter.X, Y = WindowCenter.Y,
+        };
 
         this.textureRenderer.Render(
             this.atlasData.Texture,
@@ -149,23 +151,22 @@ public class FireScene : SceneBase
         var instructionsText = "Press space to 'start/stop' animation\n";
         instructionsText += "Press 'up' to speed up movement velocity\n";
         instructionsText += "Press 'down' to slow down movement velocity\n";
-        instructionsText += "Press 'left/right' to change animations";
 
-        this.fontRenderer.Render(this.font,
+        this.textRenderer.Render(this.font,
             instructionsText,
             new Vector2(screenCenterX, screenCenterY - (screenOneEighthHeightY * 3f)));
 
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             animationName,
             winWidth - ((int)animationNameSize.Width / 2) - largestWidth,
             animationNamePosY);
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             animationEnabledText,
             winWidth - ((int)animationEnabledTextSize.Width / 2) - largestWidth,
             animationTextPosY);
-        this.fontRenderer.Render(
+        this.textRenderer.Render(
             this.font,
             currentFrameText,
             winWidth - ((int)currentFrameTextSize.Width / 2) - largestWidth,
@@ -189,6 +190,21 @@ public class FireScene : SceneBase
             {
                 this.atlasData.Play(this.atlasData.AnimationName);
             }
+        }
+
+        // Speed animation up
+        if (currentKeyboardState.IsKeyUp(KeyCode.Up) && this.prevKeyboardState.IsKeyDown(KeyCode.Up))
+        {
+            this.animationSpeedMs -= 25;
+            this.animationSpeedMs = this.animationSpeedMs < 0 ? 0 : this.animationSpeedMs;
+            this.atlasData.SetAnimationSpeed(this.animationSpeedMs);
+        }
+
+        // Slow animation down
+        if (currentKeyboardState.IsKeyUp(KeyCode.Down) && this.prevKeyboardState.IsKeyDown(KeyCode.Down))
+        {
+            this.animationSpeedMs += 25;
+            this.atlasData.SetAnimationSpeed(this.animationSpeedMs);
         }
 
         this.prevKeyboardState = currentKeyboardState;
