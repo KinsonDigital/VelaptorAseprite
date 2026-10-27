@@ -41,5 +41,6 @@
         "**/bin": true,
         "**/obj": true,
         "**/.idea": true
-    }
+    },
+    "dotnet.defaultSolution": "VelaptorAseprite.slnx"
 }
