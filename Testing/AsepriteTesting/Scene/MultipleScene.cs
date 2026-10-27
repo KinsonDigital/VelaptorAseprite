@@ -127,32 +127,31 @@ public class MultipleScene : SceneBase
 
     private void RenderText()
     {
-        const int verticalSpacing = 15;
+        const int verticalSpacing = 25;
         var winWidth = (int)WindowSize.Width;
 
         var screenCenterX = (int)(WindowSize.Width / 2);
-        var screenCenterY = (int)(WindowSize.Height / 2);
-        var screenOneEighthHeightY = (int)(WindowSize.Height / 8);
-
-        var animationName = $"Animation Name: {this.atlasData.AnimationName}";
-        var animationNameSize = this.font.Measure(animationName);
-        var animationNamePosY = screenOneEighthHeightY * 6;
-
-        var velocityText = $"Velocity: {this.velocityY}";
-        var velocityTextSize = this.font.Measure(velocityText);
-        var velocityTextPosY = animationNamePosY + (int)animationNameSize.Height + verticalSpacing;
-
-        var animationEnabledText = $"Animation Enabled: {this.atlasData.IsAnimating}";
-        var animationEnabledTextSize = this.font.Measure(animationEnabledText);
-        var animationTextPosY = velocityTextPosY + (int)velocityTextSize.Height + verticalSpacing;
-
-        var movingDownText = $"Moving Down: {this.movingDown}";
-        var movingDownTextSize = this.font.Measure(movingDownText);
-        var movingDownTextPosY = animationTextPosY + (int)animationEnabledTextSize.Height + verticalSpacing;
+        var screenBottomY = (int)WindowSize.Height;
 
         var currentFrameText = $"Current Frame: {this.atlasData.CurrentFrameIndex}";
         var currentFrameTextSize = this.font.Measure(currentFrameText);
-        var currentFrameTextPosY = movingDownTextPosY + (int)movingDownTextSize.Height + verticalSpacing;
+        var currentFrameTextPosY = screenBottomY - (int)(currentFrameTextSize.Height / 2f) - verticalSpacing;
+
+        var movingDownText = $"Moving Down: {this.movingDown}";
+        var movingDownTextSize = this.font.Measure(movingDownText);
+        var movingDownTextPosY = currentFrameTextPosY - (int)(movingDownTextSize.Height / 2f) - verticalSpacing;
+
+        var animationEnabledText = $"Animation Enabled: {this.atlasData.IsAnimating}";
+        var animationEnabledTextSize = this.font.Measure(animationEnabledText);
+        var animationTextPosY = movingDownTextPosY - (int)(animationEnabledTextSize.Height / 2f) - verticalSpacing;
+
+        var velocityText = $"Velocity: {this.velocityY}";
+        var velocityTextSize = this.font.Measure(velocityText);
+        var velocityTextPosY = animationTextPosY - (int)(animationEnabledTextSize.Height / 2f) - verticalSpacing;
+
+        var animationName = $"Animation Name: {this.currentAnimation}";
+        var animationNameSize = this.font.Measure(animationName);
+        var animationNamePosY = velocityTextPosY - (int)(animationNameSize.Height / 2f) - verticalSpacing;
 
         var instructionWidths = new[]
         {
@@ -168,10 +167,11 @@ public class MultipleScene : SceneBase
         instructionsText += "Press 'up' to speed up movement velocity\n";
         instructionsText += "Press 'down' to slow down movement velocity\n";
         instructionsText += "Press 'left/right' to change animations";
+        var instructionsTextSize = this.font.Measure(instructionsText);
 
         this.textRenderer.Render(this.font,
             instructionsText,
-            new Vector2(screenCenterX, screenCenterY - (screenOneEighthHeightY * 3f)));
+            new Vector2(screenCenterX, (instructionsTextSize.Height / 2f) + verticalSpacing));
 
         this.textRenderer.Render(
             this.font,
