@@ -191,6 +191,21 @@ public class FireScene : SceneBase
             }
         }
 
+        // Speed animation up
+        if (currentKeyboardState.IsKeyUp(KeyCode.Up) && this.prevKeyboardState.IsKeyDown(KeyCode.Up))
+        {
+            this.animationSpeedMs -= 25;
+            this.animationSpeedMs = this.animationSpeedMs < 0 ? 0 : this.animationSpeedMs;
+            this.atlasData.SetAnimationSpeed(this.animationSpeedMs);
+        }
+
+        // Slow animation down
+        if (currentKeyboardState.IsKeyUp(KeyCode.Down) && this.prevKeyboardState.IsKeyDown(KeyCode.Down))
+        {
+            this.animationSpeedMs += 25;
+            this.atlasData.SetAnimationSpeed(this.animationSpeedMs);
+        }
+
         this.prevKeyboardState = currentKeyboardState;
     }
 }
