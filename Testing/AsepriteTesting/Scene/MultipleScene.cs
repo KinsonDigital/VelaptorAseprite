@@ -241,11 +241,13 @@ public class MultipleScene : SceneBase
     /// </summary>
     private void SwitchAnimation()
     {
-        this.currentAnimation = this.atlasData.AnimationName switch
+        this.currentAnimation = this.currentAnimation switch
         {
             FireAnimation => SparkAnimation,
             SparkAnimation => FireAnimation,
             _ => this.atlasData.AnimationName
         };
+
+        this.atlasData.Play(this.currentAnimation);
     }
 }
