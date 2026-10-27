@@ -149,7 +149,6 @@ public class FireScene : SceneBase
         var instructionsText = "Press space to 'start/stop' animation\n";
         instructionsText += "Press 'up' to speed up movement velocity\n";
         instructionsText += "Press 'down' to slow down movement velocity\n";
-        instructionsText += "Press 'left/right' to change animations";
 
         this.textRenderer.Render(this.font,
             instructionsText,
