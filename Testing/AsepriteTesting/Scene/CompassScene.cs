@@ -87,10 +87,11 @@ public class CompassScene : SceneBase
     {
         var frame = this.atlasData!.GetCurrentFrame();
         var srcRect = frame.Bounds;
-        var destRect = new Rectangle(0, 0, (int)this.atlasData!.Texture.Width, (int)this.atlasData!.Texture.Height);
-
-        destRect.X = (int)(WindowSize.Width / 2);
-        destRect.Y = (int)(WindowSize.Height / 2);
+        var destRect = new Rectangle(0, 0, (int)this.atlasData!.Texture.Width, (int)this.atlasData!.Texture.Height)
+        {
+            X = (int)(WindowSize.Width / 2),
+            Y = (int)(WindowSize.Height / 2),
+        };
 
         this.textureRenderer.Render(
             this.atlasData!.Texture,

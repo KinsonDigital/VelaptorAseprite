@@ -107,9 +107,11 @@ public class MultipleScene : SceneBase
         var frame = this.atlasData.GetCurrentFrame();
 
         var srcRect = frame.Bounds;
-        var destRect = new Rectangle(0, 0, (int)this.atlasData.Texture.Width, (int)this.atlasData.Texture.Height);
-        destRect.X = WindowCenter.X;
-        destRect.Y = WindowCenter.Y;
+        var destRect = new Rectangle(0, 0, (int)this.atlasData.Texture.Width, (int)this.atlasData.Texture.Height)
+        {
+            X = WindowCenter.X,
+            Y = WindowCenter.Y,
+        };
 
         this.textureRenderer.Render(
             this.atlasData.Texture,
